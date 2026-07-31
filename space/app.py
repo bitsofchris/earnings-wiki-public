@@ -69,5 +69,39 @@ with gr.Blocks(title="Earnings Wiki") as demo:
                     "Use the replay button to watch four quarters of themes assemble.")
         gr.HTML('<iframe src="/gradio_api/file=graph/index.html" style="width:100%;height:80vh;border:0"></iframe>'
                 '<p>If the frame is blank, open <a href="/gradio_api/file=graph/index.html" target="_blank">the graph directly</a>.</p>')
+    with gr.Tab("About"):
+        gr.Markdown("""
+## What this is
+
+Every quarter, the CEOs and CFOs of the world's largest companies spend an hour answering pointed questions
+from professional analysts — under legal obligation not to lie. Earnings calls are some of the most
+information-dense public statements that exist about where the economy, technology, and investment are
+actually going. Almost nobody reads them all.
+
+This project does. Every call from ~130 large-cap companies (Nasdaq-100 + Dow 30 + extras), every quarter,
+is put through the same structured interview — ten standing questions:
+
+**economy · consumer · business (what's working and failing) · investing · scarcity (what constraint binds them)
+· forward (what they believe) · acting (what they're funding) · hedges (what they wouldn't commit to)
+· contradictions · street (what analysts pressed on)**
+
+Because every company answers the *same* questions every quarter, you can compare across companies, watch
+themes form over time, and catch the gap between what managements say and what they fund.
+
+## How it works
+
+1. **Transcripts** come from Yahoo Finance via the open `defeatbeta/yahoo-finance-data` mirror on Hugging Face.
+2. **One isolated LLM session per call** distills the transcript against the ten questions — numbers only as
+   deltas ("raised again", "roughly halved"), verbatim executive quotes, dodges and spin called out plainly.
+3. **Every claim becomes a node** in a similarity graph (OpenAI embeddings, k-nearest-neighbor edges) — the
+   3D tab. Clusters aren't predefined; they emerge from the data.
+4. **This chat** retrieves the most relevant analysis fragments for your question and asks a free hosted
+   model to answer from them, with citations.
+
+## Honest limits
+
+Everything here is AI-generated analysis and can contain errors — verify quotes against primary transcripts
+before relying on them. Coverage is large-cap and US-centric. Nothing here is investment advice.
+""")
 
 demo.launch(allowed_paths=[os.path.join(HERE, "graph")])
