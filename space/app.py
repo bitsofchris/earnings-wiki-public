@@ -55,53 +55,41 @@ def chat(message, history):
         return f"Model call failed ({type(e).__name__}) — the free Inference API may be rate-limited; try again shortly."
 
 with gr.Blocks(title="Earnings Wiki") as demo:
-    gr.Markdown("# Earnings Wiki\nAsk questions across four quarters of structured earnings-call analyses "
-                "(~130 large-cap companies, 10 standing questions per call). "
-                "*AI-generated summaries — may contain errors. Not investment advice.*")
-    with gr.Tab("Ask the corpus"):
-        gr.ChatInterface(chat, type="messages",
-                         examples=["What constraints are binding companies right now?",
-                                   "What are companies saying about token or inference costs?",
-                                   "Compare what the cloud providers say the opportunity is",
-                                   "Which companies raised capex guidance and why?"])
-    with gr.Tab("3D theme graph"):
-        gr.Markdown("Every claim from every call, embedded and linked to its nearest claims across companies. "
-                    "Use the replay button to watch four quarters of themes assemble.")
-        gr.HTML('<iframe src="/gradio_api/file=graph/index.html" style="width:100%;height:80vh;border:0"></iframe>'
-                '<p>If the frame is blank, open <a href="/gradio_api/file=graph/index.html" target="_blank">the graph directly</a>.</p>')
+    gr.Markdown("# Earnings Wiki — talk to four quarters of earnings calls\n"
+                "*AI-generated analysis — may contain errors. Not investment advice.*")
+    with gr.Tab("Graph + chat"):
+        with gr.Row():
+            with gr.Column(scale=3):
+                gr.HTML('<iframe src="/gradio_api/file=graph/index.html" style="width:100%;height:82vh;border:0;border-radius:8px"></iframe>'
+                        '<p style="margin:4px 0 0">Hit ▶ replay to watch themes assemble over four quarters · '
+                        '<a href="/gradio_api/file=graph/index.html" target="_blank">open full-screen</a></p>')
+            with gr.Column(scale=2):
+                gr.ChatInterface(chat, type="messages", chatbot=gr.Chatbot(height=560, type="messages"),
+                                 examples=["What new themes emerged over the last year?",
+                                           "Which themes have gone quiet?",
+                                           "What constraint is binding each cloud provider?",
+                                           "Who raised capex guidance, and what reason did they give?",
+                                           "What did analysts press Apple on, and what got dodged?",
+                                           "Where do managements' beliefs diverge from what they're actually funding?"])
     with gr.Tab("About"):
         gr.Markdown("""
-## What this is
+Earnings calls are the most information-dense public statements companies make — executives on the record,
+grilled by professionals who are paid to be skeptical.
 
-Every quarter, the CEOs and CFOs of the world's largest companies spend an hour answering pointed questions
-from professional analysts — under legal obligation not to lie. Earnings calls are some of the most
-information-dense public statements that exist about where the economy, technology, and investment are
-actually going. Almost nobody reads them all.
+This project reads a set of them (~130 big caps, every quarter) and **extracts specific ideas through fixed
+lenses** — what's scarce, what they believe vs. what they fund, what they dodged, what analysts pressed on —
+instead of summarizing. Intent-based extraction beats generic LLM summaries: the same questions asked of every
+company every quarter produce *comparable atoms*.
 
-This project does. Every call from ~130 large-cap companies (Nasdaq-100 + Dow 30 + extras), every quarter,
-is put through the same structured interview — ten standing questions:
+Those atoms become a **knowledge graph** (embeddings + nearest-neighbor edges). No taxonomy is defined up
+front — clusters emerge from the data, and the replay slider shows them forming over four quarters. The chat
+answers from the same atoms, with citations.
 
-**economy · consumer · business (what's working and failing) · investing · scarcity (what constraint binds them)
-· forward (what they believe) · acting (what they're funding) · hedges (what they wouldn't commit to)
-· contradictions · street (what analysts pressed on)**
+Things to try: *what new themes emerged this year? · which themes went quiet? · what's the most common thing
+analysts asked about? · which companies contradict each other? · what does everyone say is scarce?*
 
-Because every company answers the *same* questions every quarter, you can compare across companies, watch
-themes form over time, and catch the gap between what managements say and what they fund.
-
-## How it works
-
-1. **Transcripts** come from Yahoo Finance via the open `defeatbeta/yahoo-finance-data` mirror on Hugging Face.
-2. **One isolated LLM session per call** distills the transcript against the ten questions — numbers only as
-   deltas ("raised again", "roughly halved"), verbatim executive quotes, dodges and spin called out plainly.
-3. **Every claim becomes a node** in a similarity graph (OpenAI embeddings, k-nearest-neighbor edges) — the
-   3D tab. Clusters aren't predefined; they emerge from the data.
-4. **This chat** retrieves the most relevant analysis fragments for your question and asks a free hosted
-   model to answer from them, with citations.
-
-## Honest limits
-
-Everything here is AI-generated analysis and can contain errors — verify quotes against primary transcripts
-before relying on them. Coverage is large-cap and US-centric. Nothing here is investment advice.
+Transcripts via Yahoo Finance through the open `defeatbeta/yahoo-finance-data` mirror. Everything here is
+AI-generated, can contain errors, and is not investment advice.
 """)
 
 demo.launch(allowed_paths=[os.path.join(HERE, "graph")])
