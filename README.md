@@ -1,3 +1,14 @@
+---
+title: Earnings Wiki
+emoji: 📈
+colorFrom: gray
+colorTo: indigo
+sdk: gradio
+app_file: space/app.py
+pinned: false
+license: mit
+---
+
 # earnings-wiki (public dataset + explorer)
 
 A structured, longitudinal corpus of large-cap earnings calls — four quarters (2025-Q4 → 2026-Q3), ~130 companies (Nasdaq-100 + Dow 30 + extras), one analysis note per call, every note answering the same ten standing questions.

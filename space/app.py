@@ -60,9 +60,10 @@ with gr.Blocks(title="Earnings Wiki") as demo:
     with gr.Tab("Graph + chat"):
         with gr.Row():
             with gr.Column(scale=3):
-                gr.HTML('<iframe src="/gradio_api/file=graph/index.html" style="width:100%;height:82vh;border:0;border-radius:8px"></iframe>'
-                        '<p style="margin:4px 0 0">Hit ▶ replay to watch themes assemble over four quarters · '
-                        '<a href="/gradio_api/file=graph/index.html" target="_blank">open full-screen</a></p>')
+                GRAPH_URL = f"/gradio_api/file={os.path.join(HERE, 'graph', 'index.html')}"
+                gr.HTML(f'<iframe src="{GRAPH_URL}" style="width:100%;height:82vh;border:0;border-radius:8px"></iframe>'
+                        f'<p style="margin:4px 0 0">Hit ▶ replay to watch themes assemble over four quarters · '
+                        f'<a href="{GRAPH_URL}" target="_blank">open full-screen</a></p>')
             with gr.Column(scale=2):
                 gr.ChatInterface(chat, type="messages", chatbot=gr.Chatbot(height=560, type="messages"),
                                  examples=["What new themes emerged over the last year?",
