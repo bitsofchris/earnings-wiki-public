@@ -1,0 +1,63 @@
+---
+ticker: INTU
+call_date: 2026-02-26
+report_quarter: 2026-Q1
+period_reported: fiscal 2026-Q2
+source: bronze/INTU/2026-Q1/transcript-2026-02-26.md
+generated: 2026-07-31 (automated silver pass, schema v3)
+mentions: [OPENAI, ANTHROPIC, CLAUDE, CREDIT KARMA, TURBOTAX, QUICKBOOKS, MAILCHIMP, IRS]
+answers:
+  economy: "CFO's internal indicators (customer employee hours worked, cash reserves) show stable-to-improving SMB health into January, with mid-market outperforming micro businesses; discretionary categories like advertising/retail softening while IT services and manufacturing hold up."
+  consumer: "Consumer tax demand is running ahead of the overall IRS filing pace (IRS returns down 5 points through Feb 6 vs. TurboTax revenue up 12%), with the gap explained by share gains in assisted filing and Credit Karma-driven early tax intent, not just timing."
+  business: "GBSG revenue +18% (21% ex-Mailchimp) and mid-market (QBO Advanced + Intuit Enterprise Suite) +40% are working; Mailchimp is not — small-customer churn/acquisition improvement 'is taking longer than expected,' pushing a return to double-digit growth to 'sometime beyond fiscal 2026.'"
+  investing: "Expanding mid-market direct sales headcount ~30% and shipping vertical-specific ERP editions (construction first); newly signed multiyear Anthropic partnership and OpenAI App Directory launch redirect distribution investment toward third-party AI surfaces."
+  scarcity: "Management frames the binding constraint as trusted human expertise at scale, not compute — 'demand is high and supply is short because there's not too many that do what we do end to end,' with HI capacity (QuickBooks Live, assisted tax experts) the actual bottleneck to monetizing AI gains."
+  forward: "Management expects the AI+HI combination to sustain double-digit revenue growth for years, expects assisted tax and mid-market growth to remain durable multi-year vectors, and expects to eventually shift some subscription pricing toward consumption once bundled AI+HI lineup rolls out."
+  acting: "Rolling out 'Intuit Intelligence' broadly, launching an Anthropic-powered Agent Builder integration and Claude Cowork access inside Intuit Enterprise Suite, growing local/in-person tax footprint to ~600 service centers, and signing top-20 accounting-firm reseller partnerships (Citrin Cooperman, Eide Bailly)."
+  hedges: "CFO explicitly declined to commit to a Mailchimp turnaround timeline beyond 'sometime beyond fiscal 2026' and said 'all options... are on the table' for its portfolio fit; management also would not commit to any margin uplift from the OpenAI/Anthropic deals, stating flatly 'there is no margin expansion' from that channel today."
+  contradictions: "Management insists AI partnerships pose no data-leakage or disintermediation risk ('data doesn't leave our 4 walls'... 'they have 0 interest in it') while simultaneously conceding 'it is yet to be determined whether or not customers actually will want to engage in their finances with us through these apps' — confidence and admitted uncertainty coexist in the same answer."
+  street: "Analysts pressed hard on one anxiety across nearly every question: is Intuit's AI moat genuine or is it handing its proprietary data and customer relationship to Anthropic/OpenAI ('the fox in the henhouse')? Secondary threads covered Q3 margin guidance optics after a Q2 beat, and Mailchimp's stalled turnaround, both areas where management redirected to full-year confidence rather than the specific quarter or timeline asked about."
+---
+
+# INTU — fiscal 2026-Q2 call (2026-02-26)
+
+**The key idea:** Intuit posted its best growth print in years (17% revenue) and used the call almost entirely to pre-empt one investor fear: that partnering with Anthropic and OpenAI hands its proprietary financial data and customer relationships to LLM providers who could eventually disintermediate it. Management's defense rests on a "context vs. core" framing — they keep the regulated, liability-bearing, human-expert-augmented work and let LLMs handle generic long-tail requests — but the same executives who called the moat "untouched" also admitted they don't yet know if customers will actually transact through third-party AI apps.
+
+## The read — 3-5 points from the whole transcript
+1. **AI is arriving through pricing power, not layoffs.** Sandeep Aujla's monetization framework is explicit: value-based pricing (the accounting agent saves ~12-14 hours a month, priced against a $75/hour reference), agent-triggered cross-sell ("payroll due tomorrow... invoice not paid... click of a button, get access to capital"), and AI driving *more* human-expert consumption, not less — QuickBooks Live attach is "22 points higher" when AI and HI are bundled. This is AI increasing services revenue, the opposite of the margin-via-headcount-reduction story told elsewhere in software.
+2. **Assisted tax is the growth vector nobody outside Intuit is pricing in.** The assisted category (both consumer and business) is "more than 7x" the size of DIY tax, grew 45% last year to "well over $2 billion," and is disrupting via combined AI+HI even as raw IRS filing volume fell 5 points through Feb 6. Intuit's local footprint hit ~600 service centers with 5.1 million landing-page/store visitors through early February, up from 4.2 million a year prior — a physical, place-based bet inside a software company.
+3. **Mailchimp is the one visible failure, and guidance on it just got worse.** Small-customer churn and acquisition "is taking longer than expected," and the prior "double-digit growth" target quietly moved to "sometime beyond fiscal 2026" with "all options... on the table" for the asset itself — the closest thing to an admission of strategic drift on the call.
+4. **The Anthropic/OpenAI deals carry zero incremental economics today.** Sasan Goodarzi stated plainly there is "no margin expansion" from usage inside OpenAI's App Directory or via the Anthropic Agent Builder partnership — Intuit "does not share in any of the economics" either way, meaning the partnerships are pure distribution/optionality plays until proven otherwise, not near-term revenue.
+5. **Internal SMB health data reads better than public sentiment surveys.** CFO Sandeep Aujla's proprietary indicators (customer employee hours worked +4%, stable-to-up cash reserves for mid-market/small business, micro businesses "down a bit") directly contradict soft consumer-confidence headlines cited by an analyst — a real-time, granular window into small-business health that's more current than survey data.
+
+## Economy & consumer
+- **Hours-worked and cash-reserve data show a stabilizing SMB base.** "The stats on the number of hours being worked by the employees of our customers... are up around 4%... which is actually stronger in January than it was in the October time frame," per Aujla — his self-described "Uber metric" for business health.
+- **Discretionary spend is diverging from non-discretionary.** "IT services, nondiscretionary is doing well. Advertising, retail, discretionary is seeing some declines" — a clean read on where SMB customers are pulling back first.
+- **Consumer tax demand outran actual filing volume.** IRS returns were "down more than 5 points through February 6," yet TurboTax revenue grew 12% — management frames this as share gain in assisted plus Credit Karma-driven early intent, not a one-off timing quirk, backed by a year-ago comp (IRS down 8 points, TurboTax up only 4%) that shows the gap widening favorably.
+
+## The business — what's working, what's not
+- **Mid-market is the standout growth engine.** Online ecosystem revenue for QBO Advanced and Intuit Enterprise Suite grew "approximately 40%," new IES contracts grew "nearly 50% quarter-over-quarter," and the company is expanding its direct mid-market sales team by "approximately 30%" on the back of "attractive LTV to CAC economics."
+- **Payments and bill pay are compounding fast.** Total online payments volume including bill pay grew 29%, with bill pay volume "nearly doubl[ing]" — a genuine breakout inside a mature payments book.
+- **Mailchimp remains the drag.** Revenue was "down slightly versus a year ago," and small-customer retention/acquisition problems are structurally unresolved, pushing the recovery timeline out past the current fiscal year.
+- **Desktop is managed for cash, not growth.** Desktop ecosystem revenue grew 10% with enterprise desktop in the high teens, but full-year guidance stays pinned at "low single digits" — a legacy line being milked, not invested in.
+
+## Investing & scarcity
+- **Capital is going to distribution and vertical depth, not compute.** The construction-specific Intuit Enterprise Suite edition (first of a planned series of industry verticals), the ~30% mid-market sales headcount expansion, and new reseller partnerships with top-20 accounting firms (Citrin Cooperman, Eide Bailly) are all go-to-market investments layered on an AI product base that's largely proprietary/knowledge-engineering rather than raw LLM scale.
+- **The real constraint is trusted human capacity, not silicon.** Unlike the AI-infrastructure names racing to buy compute, Intuit's bottleneck is stated as expert supply: "demand is high and supply is short because there's not too many that do what we do end to end" — QuickBooks Live and assisted-tax staffing are the scarce resource being scaled (QB Live customer growth "over 50%" in the quarter), not GPUs or power.
+- **No compute/infrastructure commentary at all** — notably absent for a company embedding two frontier LLM providers into its product; Intuit frames itself purely as a downstream consumer of OpenAI/Anthropic capacity, taking on no capex or power exposure itself.
+
+## Where they think it's going vs what they're doing about it
+- **Belief: AI+HI unlocks a durable multi-year double-digit growth trajectory across a $300B TAM at just 6% penetration.** Action matches somewhat — sales headcount, vertical ERP editions, and accountant reseller programs are real spend behind that belief.
+- **Belief: bundled AI+HI pricing will eventually replace parts of today's subscription model with consumption-based pricing.** Action lags — this is still "we are assessing and we're going to be rolling out" based on internal tests, not a committed roadmap or timeline; the company has not yet repriced anything.
+- **Belief: the Anthropic/OpenAI partnerships expand the addressable customer base ("where the eyeballs are").** Action is asymmetric — Intuit shipped the integrations (four apps in OpenAI's directory, Claude Agent Builder access) but structured the commercial terms so it "does not share in any of the economics" either way, meaning the company is testing the channel with product effort while explicitly hedging financial commitment to it.
+
+## Hedges — what they wouldn't commit to
+- **No Mailchimp turnaround date.** Guidance moved from "double-digit growth" in a defined window to vaguely "sometime beyond fiscal 2026," paired with "all options... are on the table" — corporate-speak for a possible divestiture or write-down under evaluation.
+- **No margin credit for the LLM partnerships.** Sasan was direct: "There is no margin expansion" from OpenAI/Anthropic distribution today, and the company will not share in customer-usage economics generated inside those apps.
+- **No certainty customers will actually adopt the third-party AI channel.** "It is yet to be determined whether or not customers actually will want to engage in their finances with us through these apps" — a rare on-record admission of unproven demand for a headline partnership.
+
+## The street — what analysts asked
+- **The dominant anxiety, asked multiple ways: does the Anthropic/OpenAI relationship expose Intuit's proprietary data and customer relationship to replication risk?** One analyst framed it directly as "letting the fox into the henhouse." Management's answer leaned on contractual/architectural assurances (data stays in "4 walls," API/MCP-mediated access) rather than any external verification.
+- **Secondary thread: margin-guidance optics.** Analysts flagged that Q3 operating margin guidance looked soft after a strong Q2 beat; management attributed it to cost timing shifted from Q2 into Q3 and reaffirmed full-year margin confidence — a deflection from the specific quarter to the full-year number.
+- **Mailchimp got one direct question and one direct non-answer** on what happens if the business can't return to double-digit growth — management declined to specify a contingency plan.
+- **Compressed worry:** are Intuit's AI partnerships a distribution win or the first step toward commoditizing the thing that makes Intuit "a category of one"?

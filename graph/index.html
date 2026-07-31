@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>earnings-wiki — themes over time</title>
+<style>
+  body { margin: 0; background: #0b0d12; color: #cdd3de; font: 13px/1.4 -apple-system, sans-serif; overflow: hidden; }
+  #graph { position: absolute; inset: 0; }
+  #hud { position: absolute; top: 12px; left: 12px; z-index: 10; background: rgba(12,15,22,.88); border: 1px solid #26304a;
+         border-radius: 10px; padding: 12px 14px; width: 300px; }
+  #hud h1 { font-size: 14px; margin: 0 0 8px; color: #e8ecf4; }
+  #hud label { display: block; margin: 8px 0 2px; color: #8b94a7; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+  select, input[type=range] { width: 100%; background: #131826; color: #cdd3de; border: 1px solid #26304a; border-radius: 6px; padding: 4px; }
+  button { background: #1d2740; color: #dfe6f2; border: 1px solid #33406a; border-radius: 6px; padding: 5px 12px; cursor: pointer; margin-top: 8px; }
+  button:hover { background: #2a3860; }
+  #stats { margin-top: 8px; color: #8b94a7; font-size: 12px; white-space: pre-line; }
+  #panel { position: absolute; right: 12px; top: 12px; z-index: 10; background: rgba(12,15,22,.92); border: 1px solid #26304a;
+           border-radius: 10px; padding: 12px 14px; width: 360px; display: none; max-height: 70vh; overflow-y: auto; }
+  #panel h2 { font-size: 13px; margin: 0 0 6px; color: #ffd479; }
+  #panel .meta { color: #8b94a7; font-size: 11px; margin-bottom: 8px; }
+  #panel .neighbors { margin-top: 10px; border-top: 1px solid #26304a; padding-top: 8px; }
+  #panel .neighbors div { margin: 4px 0; color: #9fb4d8; cursor: pointer; }
+  #timeline { position: absolute; left: 50%; transform: translateX(-50%); bottom: 18px; z-index: 10; width: min(720px, 80vw);
+              background: rgba(12,15,22,.88); border: 1px solid #26304a; border-radius: 10px; padding: 10px 16px; }
+  #tlabel { text-align: center; color: #ffd479; font-size: 13px; margin-bottom: 4px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/3d-force-graph@1.73.4/dist/3d-force-graph.min.js"></script>
+</head>
+<body>
+<div id="graph"></div>
+<div id="hud">
+  <h1>earnings-wiki · themes over time</h1>
+  <label>Color by</label>
+  <select id="facet">
+    <option value="section">section (question)</option>
+    <option value="sector" selected>sector</option>
+    <option value="quarter">quarter</option>
+    <option value="index">index (ndx/dow/extra)</option>
+  </select>
+  <label>Filter sector</label>
+  <select id="fsector"><option value="">all</option></select>
+  <label>Min similarity (edges)</label>
+  <input type="range" id="minsim" min="0.30" max="0.70" step="0.01" value="0.42">
+  <button id="play">▶ replay</button>
+  <div id="stats"></div>
+</div>
+<div id="panel"></div>
+<div id="timeline"><div id="tlabel"></div><input type="range" id="tslider" min="0" max="100" value="100" style="width:100%"></div>
+<script>
+(async () => {
+  const [nodesR, edgesR] = await Promise.all([fetch('nodes.json'), fetch('edges.json')]);
+  const NODES = (await nodesR.json()).nodes;
+  const EDGES = (await edgesR.json()).edges;
+  const dates = [...new Set(NODES.map(n => n.call_date))].sort();
+  const palette = ['#5b8ff9','#61ddaa','#f6bd16','#f08bb4','#7262fd','#78d3f8','#9661bc','#f6903d','#e8684a','#6dc8ec','#9ac94f','#d3cef6'];
+  const colorMaps = {};
+  const facetVals = f => [...new Set(NODES.map(n => n[f]))].sort();
+  for (const f of ['section','sector','quarter','index']) {
+    colorMaps[f] = Object.fromEntries(facetVals(f).map((v,i) => [v, palette[i % palette.length]]));
+  }
+  document.getElementById('fsector').innerHTML += facetVals('sector').map(s => `<option>${s}</option>`).join('');
+  const deg = {}; EDGES.forEach(e => { deg[e.sourceId] = (deg[e.sourceId]||0)+1; deg[e.targetId] = (deg[e.targetId]||0)+1; });
+
+  let facet = 'sector', fsector = '', minsim = 0.42, tIdx = dates.length - 1;
+  const G = ForceGraph3D()(document.getElementById('graph'))
+    .width(window.innerWidth).height(window.innerHeight)
+    .backgroundColor('#0b0d12')
+    .nodeLabel(n => `<b>${n.ticker}</b> ${n.call_date} · ${n.section}<br>${n.name}`)
+    .nodeColor(n => colorMaps[facet][n[facet]] || '#888')
+    .nodeVal(n => 1 + Math.min(8, (deg[n.id]||0)))
+    .linkOpacity(0.25)
+    .linkWidth(l => (l.weight - 0.3) * 3)
+    .onNodeClick(n => showPanel(n));
+
+  function visible() {
+    const maxDate = dates[tIdx];
+    const ns = NODES.filter(n => n.call_date <= maxDate && (!fsector || n.sector === fsector));
+    const ids = new Set(ns.map(n => n.id));
+    const ls = EDGES.filter(e => e.weight >= minsim && ids.has(e.sourceId) && ids.has(e.targetId))
+                    .map(e => ({source: e.sourceId, target: e.targetId, weight: e.weight}));
+    return {nodes: ns.map(n => ({...n})), links: ls};
+  }
+  function refresh() {
+    const d = visible();
+    G.graphData(d);
+    document.getElementById('tlabel').textContent = `≤ ${dates[tIdx]}`;
+    const q = {}; d.nodes.forEach(n => q[n.quarter] = (q[n.quarter]||0)+1);
+    document.getElementById('stats').textContent =
+      `${d.nodes.length} atoms · ${d.links.length} edges\n` +
+      Object.entries(q).sort().map(([k,v]) => `${k}: ${v} atoms`).join('\n');
+  }
+  function showPanel(n) {
+    const p = document.getElementById('panel'); p.style.display = 'block';
+    const nbrs = EDGES.filter(e => (e.sourceId === n.id || e.targetId === n.id) && e.weight >= minsim)
+      .map(e => ({id: e.sourceId === n.id ? e.targetId : e.sourceId, w: e.weight}))
+      .sort((a,b) => b.w - a.w).slice(0, 8)
+      .map(x => ({...NODES.find(m => m.id === x.id), w: x.w})).filter(x => x.id);
+    p.innerHTML = `<h2>${n.name}</h2><div class="meta">${n.ticker} · ${n.call_date} · ${n.section} · [[${n.note}]]</div>
+      <div>${n.description}</div>
+      <div class="neighbors"><b>nearest claims:</b>${nbrs.map(m =>
+        `<div data-id="${m.id}">${m.w.toFixed(2)} · <b>${m.ticker}</b> ${m.name}</div>`).join('')}</div>`;
+    p.querySelectorAll('[data-id]').forEach(el => el.onclick = () => {
+      const m = NODES.find(x => x.id === el.dataset.id); if (m) showPanel(m);
+    });
+  }
+  document.getElementById('facet').onchange = e => { facet = e.target.value; G.nodeColor(n => colorMaps[facet][n[facet]] || '#888'); };
+  document.getElementById('fsector').onchange = e => { fsector = e.target.value; refresh(); };
+  document.getElementById('minsim').oninput = e => { minsim = +e.target.value; refresh(); };
+  const slider = document.getElementById('tslider');
+  slider.max = dates.length - 1; slider.value = tIdx;
+  slider.oninput = e => { tIdx = +e.target.value; refresh(); };
+  let playing = null;
+  document.getElementById('play').onclick = () => {
+    if (playing) { clearInterval(playing); playing = null; document.getElementById('play').textContent = '▶ replay'; return; }
+    tIdx = 0; slider.value = 0; refresh();
+    document.getElementById('play').textContent = '⏸ pause';
+    playing = setInterval(() => {
+      if (tIdx >= dates.length - 1) { clearInterval(playing); playing = null; document.getElementById('play').textContent = '▶ replay'; return; }
+      tIdx++; slider.value = tIdx; refresh();
+    }, 350);
+  };
+  window.addEventListener('resize', () => G.width(window.innerWidth).height(window.innerHeight));
+  refresh();
+})();
+</script>
+</body>
+</html>

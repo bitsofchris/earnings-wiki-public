@@ -1,0 +1,60 @@
+---
+ticker: JNJ
+call_date: 2026-01-21
+report_quarter: 2026-Q1
+period_reported: fiscal 2025-Q4
+source: bronze/JNJ/2026-Q1/transcript-2026-01-21.md
+generated: 2026-07-31 (automated silver pass, schema v3)
+mentions: [BRISTOL MYERS SQUIBB, BAYER, ABIOMED, SHOCKWAVE, DARZALEX, CARVICTI, TREMFYA, STELARA, SPRAVATO, CAPLYTA, ICOTIDE, INLEXO, MILVEXIAN, OTTAVA, MONARCH, VARIPULSE]
+answers:
+  economy: "No macro commentary beyond healthcare policy — management explicitly dismissed ACA subsidy expiration and 'big beautiful bill' policy risk as immaterial to MedTech, framing the real constraint as clinical capacity, not payer coverage or consumer demand."
+  consumer: "Omitted — JNJ sells to providers/payers/patients through clinicians, not directly to a discretionary consumer; the closest proxy is 'procedure demand remains very robust' per Tim Schmid, i.e. no softening in elective/urgent care volumes."
+  business: "STELARA's biosimilar erosion (down 48.6% in Q4) is now fully absorbed and in the past — full-year growth was double-digit excluding it; growth is broad, with 28 products now over $1B and 13 pharma brands growing double digits. Weak spots are narrower: EP growing below the cardiovascular franchise's pace, legacy surgical-vision categories declining, and China VBP still pressuring surgery/ortho margins."
+  investing: "$32B deployed in 2025 across R&D and M&A (Intra-Cellular, Halda Therapeutics), plus new US manufacturing capacity; 2026 guide embeds 'heavier investment at the outset of the year' into launches and pipeline even while still expanding margin — capital is shifting explicitly toward oncology, immunology, and the three MedTech focus areas (cardiovascular, surgery, vision) and away from orthopedics, which is being spun out by mid-2027."
+  scarcity: "For MedTech, the stated binding constraint is clinical/procedural capacity, not payer coverage or components. Elsewhere the limiting factor is regulatory/clinical timeline (de novo pathway for Ottava, MRD-endpoint pathways for myeloma trials, awaiting a permanent J-code for Inlexo) rather than capital, compute, or supply."
+  forward: "Management claims 'line of sight to double-digit growth by the end of the decade' off a ~$100B 2026 base, resting on three de-risked immunology blockbusters (Tremfya, icotide, a co-antibody), oncology reaching $50B by 2030, and post-spin MedTech shifting to >70% of revenue in markets growing north of 5% (from ~20% in 2018)."
+  acting: "Concrete commitments behind the forward view: a new PFA catheter every year through the decade plus two Carto updates annually, Ottava's FDA de novo filing already submitted with parallel Japan/US-market filings underway, an additional myeloma tri-antibody (romantamig) in development, and dedicated stranded-cost elimination work ahead of the ortho separation starting in 2026 rather than waiting for the 2027 close."
+  hedges: "Management would not commit to a longer-term margin trajectory beyond 2026 ('I wouldn't want to give you a longer-term outlook'), would not put a ceiling but also no firm target on the >70% high-growth MedTech mix ('our aspiration is not to put a limit'), and declined to quantify Talc MDL reserve exposure pending appeal of the special master's ruling."
+  contradictions: "JNJ frames Tekvéli/Talvi/Carvicti as complementary options tailored by line of therapy and patient status, but is simultaneously developing romantamig — a tri-specific combining tec- and tau-target mechanisms into one molecule — implicitly conceding the current three-drug positioning is a stepping stone, not the end state. Also notable: Q4 Tremfya growth cited by IR staff as '7565%' worldwide is very likely a transcription/mis-speak (management elsewhere says 65.4%) — flag as a data-quality issue in the source transcript, not a real number."
+  street: "Analysts probed the credibility of the double-digit-by-2030 target (organic vs. M&A vs. portfolio mix), MedTech demand durability amid ACA subsidy loss, margin trajectory tied to top-line acceleration, EP competitive position, myeloma franchise sequencing amid new MRD endpoint guidance, and the Talc MDL appeal — the last one drew a visibly irritated 'let's not get distracted' from Duato, the clearest tell that litigation overhang is the thing the buy side actually worries about most, not the operating business."
+---
+
+# JNJ — fiscal 2025-Q4 call (2026-01-21)
+
+**The key idea:** JNJ closed out its "catapult year" by putting the STELARA biosimilar cliff fully behind it (double-digit growth ex-STELARA for 2025) and is now selling a story of accelerating, diversified growth toward $100B+ in 2026 and double digits by decade-end — powered by 28 billion-dollar products rather than one or two hero drugs. The tension: that confident long-range target sits next to a stubborn decade-old overhang (the Talc MDL) that management visibly wants analysts to stop asking about, and a margin outlook management explicitly refuses to extend past one year.
+
+## The read — 3-5 points from the whole transcript
+1. **STELARA is over as a growth drag.** Full-year sales cleared $94.2B with 5.3% operational growth despite a ~620bps STELARA headwind; excluding it, growth was double-digit for the year — the cliff that dominated JNJ narratives for two years is now "in the rearview mirror," per Duato.
+2. **Growth is now unusually broad, not concentrated.** JNJ has 28 products over $1B in annual sales and 13 pharma brands growing double digits; Tremfya (+65.4% Q4), Spravato (+67.8%), Darzalex (+24.1%), Carvicti (+63.2%), Abiomed (+18.3%) and Shockwave (+22.9%, JNJ's 13th billion-dollar MedTech platform) are all firing simultaneously.
+3. **The MedTech portfolio is being deliberately reshaped, not just optimized.** Schmid quantified the shift explicitly: roughly half of the current $34B MedTech business sits in markets growing north of 5% today, versus ~20% in 2018 — and that ratio "will catapult to north of 70%" once orthopedics is spun out mid-2027.
+4. **Talc litigation is the thing management most wants to talk past.** A special-master ruling excluding some plaintiff experts (but not fully applying Rule 702 gatekeeping) triggers an appeal; Duato's closing answer — **"Let's focus on what really matters. Let's not get distracted"** — is a tell that this remains the single biggest unresolved tail risk against an otherwise clean growth story.
+5. **Robotics (Ottava) and oral immunology (icotide) are the two swing factors for the 2028-2030 target**, both explicitly labeled "de-risked" by management but neither commercially proven yet — Ottava has only just filed for FDA de novo clearance, and icotide's approval is anticipated but not yet in hand.
+
+## Economy & consumer
+- **No macro or consumer-spending commentary appears anywhere on the call** — JNJ's business model routes through clinicians, payers, and hospitals, insulating the narrative from discretionary-spending questions entirely.
+- **Policy risk (ACA subsidy expiration, "big beautiful bill") was raised by an analyst and dismissed outright**: "based on what we know today, we do not expect the loss of ACA subsidies or any potential policy changes... to have a material impact on our medtech performance," per Schmid — with **"procedure demands remained very robust across our portfolio"** offered as the real signal of underlying demand health.
+
+## The business — what's working, what's not
+- **Oncology is the crown jewel**: 21% operational growth in 2025, with Darzalex (>$14B annual sales, +22% full year) as the single largest product in the portfolio and Carvicti now treating **more than 10,000 patients across 14 markets** — management is targeting >$50B oncology sales by 2030.
+- **Immunology transition is working**: Tremfya crossed **$5B in full-year sales for the first time**, with IBD launch momentum management explicitly ties to STELARA's history (IBD was 75% of STELARA sales, implying a similar or larger opportunity for Tremfya).
+- **What's not working**: EP growth (9.5% Q4) trails the broader cardiovascular franchise (15%+) amid "competitive pressures in PFA"; surgery growth was diluted ~60bps by divestitures and further pressured by China VBP; legacy surgical-vision categories are in "ongoing market declines" even as premium IOLs outperform.
+
+## Investing & scarcity
+- **$32B deployed in 2025** across R&D and M&A, including Intra-Cellular Therapies (added Caplyta) and Halda Therapeutics (prostate oncology), plus **new state-of-the-art US manufacturing facilities** intended to "accelerate the delivery of our next wave of innovation."
+- **The binding constraint in MedTech is explicitly stated as clinical capacity, not coverage or components**: "The primary constraint... is really more about clinical capacity, not coverage levels," per Schmid — a direct rebuttal to analyst concern about payer-driven demand destruction.
+- **Regulatory/clinical-trial timelines are the real gating factor elsewhere**: Ottava is on a novel de novo FDA pathway (no predicate device exists), Inlexo awaits a permanent reimbursement J-code (expected Q2 2026) before utilization can scale, and myeloma trials face a two-track evidence bar (MRD endpoints usable only in the US; PFS/OS still required elsewhere).
+
+## Where they think it's going vs what they're doing about it
+- **Belief**: double-digit revenue growth by the end of the decade off a ~$100B base — a claim well ahead of "street consensus... modeling something in the 6% range" per one analyst's own framing.
+- **Action behind it**: committed annual PFA catheter launches plus two Carto updates a year every year through the decade, an Ottava de novo filing already submitted with parallel Japan/international filings underway, and stranded-cost elimination work on the ortho separation being pulled forward into 2026 rather than left for the 2027 close.
+- **The gap**: two of the three immunology "blockbusters" underpinning the long-range target (icotide, the co-antibody) don't have US approval yet, and Ottava — called out as the "major opportunity to really catapult" surgery growth — is pre-launch. The double-digit target is being asserted with more confidence than the pipeline's approval status alone would justify; management calls it "derisked," but derisked and de-risked-and-approved are different things.
+
+## Hedges — what they wouldn't commit to
+- **Margin trajectory beyond 2026**: "I wouldn't want to give you a longer-term outlook," Wolk said directly when pressed on whether accelerating revenue implies proportionally greater margin expansion — he fell back to "earnings would be commensurate with sales growth," a qualitative, not quantitative, commitment.
+- **A ceiling (or floor) on the high-growth MedTech mix**: Schmid declined to size the aspiration beyond ">70%" post-spin, explicitly declining to cap it: "our aspiration is not to put a limit on the high-growth markets in which we participate."
+- **Talc reserve sizing**: no quantification of potential exposure from the adverse portions of the special master's ruling — the company reiterated it would appeal without giving a number.
+
+## The street — what analysts asked
+- Recurring themes: (1) is the double-digit-by-2030 target credible, and how much is organic pipeline vs. M&A vs. portfolio pruning; (2) does MedTech demand hold up against ACA subsidy loss and coverage dynamics; (3) does higher top-line growth translate mechanically into margin expansion; (4) sequencing and differentiation across the multi-myeloma franchise (Tekveli vs. Carvicti vs. Talvi) given new FDA MRD-endpoint guidance; (5) Milvexian's competitive positioning against Bayer's rival factor XI asset given that rival's AFib trial failure.
+- The Talc MDL question was the one visibly unwelcome topic — Duato's closing non-answer ("let's not get distracted") is the tell.
+- **Compressed worry**: can JNJ's decade-end double-digit growth promise survive contact with unapproved pipeline assets (icotide, Ottava, the co-antibody) and an open-ended litigation liability that management won't size?

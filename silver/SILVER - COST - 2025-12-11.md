@@ -1,0 +1,67 @@
+---
+ticker: COST
+call_date: 2025-12-11
+report_quarter: 2025-Q4
+period_reported: fiscal 2026-Q1
+source: bronze/COST/2025-Q4/transcript-2025-12-11.md
+generated: 2026-07-31 (automated silver pass, schema v3)
+mentions: [INSTACART, UBER EATS, DOORDASH, GAP, ULTA, VERA BRADLEY, UPPER DECK]
+answers:
+  economy: "Management describes a consistent member six-to-seven-month pattern (~6.5% comps) with month-to-month 'bumpiness' attributed entirely to tariff uncertainty and port-strike cycling, not underlying demand shifts. Nonfoods inflation ran low-single-digit for a third straight quarter, driven by gold and imported goods, with tariff mitigation actively offsetting the rest."
+  consumer: "Traffic up 3.1% and ticket up 3.2% worldwide, both metrics roughly balanced rather than one driving growth; fresh/meat showed strength in both premium cuts (beef) and cheaper proteins (ground beef, poultry), suggesting a barbelled, not purely trade-down, consumer. Digitally-signed-up members skew younger and renew at a structurally lower rate than warehouse sign-ups, diluting the overall renewal rate as they become a larger share of the base."
+  business: "Comps of 6.4% (ex-gas/FX 7.1%) and 8.2% net sales growth were broad-based across fresh, food & sundries, and nonfoods; core-on-core margin rose 30bps on supply chain gains and KS penetration. SG&A leverage was one basis point negative, not because of overspending but because higher healthcare costs (growing faster than sales for the first time) and a one-off prior-year tax assessment charge masked otherwise-positive productivity offsetting wage investments and extended hours."
+  investing: "Capex guided to ~$6.5B for the year, funding accelerated warehouse openings (28 net new planned, revised down from 30 due to Spain permitting delays), five relocations, warehouse remodels, depot network expansion, and digital/AI systems. Real estate team was expanded specifically to sustain the 30+/year target, with creative low-capex formats (converted hypermarts, refurbished home-improvement boxes) now part of the playbook."
+  scarcity: "Real estate availability/permitting is the binding constraint on growth pace — explicitly named delays on 'a couple of buildings in Spain' cut FY26 net openings from a 30+ target to 28. Healthcare cost inflation is emerging as a second, less controllable cost constraint, now outpacing sales growth for the first time."
+  forward: "Management expects digital sales to keep growing faster than warehouse sales long-term, expects the renewal-rate decline to persist for 'the next few quarters' before reversing as digital-member engagement work matures, and expects roughly half of future warehouse growth to land outside the US (Canada, Mexico, Europe, Asia)."
+  acting: "Deploying AI beyond pharmacy (98%+ in-stock via autonomous reordering, mid-teens script growth) into gas inventory management; building a first-party retail-media/personalization data platform while already testing third-party media placements (Costco Auto on digital TV, gas-pump ads, CPG amplification campaigns); expanding real estate team and using non-standard real estate deals (LA affordable-housing-over-warehouse project opening 2027) to keep unit growth on track despite site scarcity."
+  hedges: "Declined to give percentage-of-members-engaging-digitally figures or forward guidance on when nonfood comps will 'lap' the tough gift-card/gold compares, or whether that will coincide with tax-refund season. Would not commit to a firm renewal-rate trajectory, explicitly flagging 'a possibility the next couple of quarters could still show a slight decline.'"
+  contradictions: "None flagged — management's framing of 'consistency' in results is itself doing some work: they repeatedly reframe a real deceleration in nonfoods comp growth (from low-double-digit into mid-single-digit) as healthy 'cycling' rather than softening demand, without naming the offsetting extended-hours tailwind as a one-time boost that won't repeat."
+  street: "Analysts clustered on: warehouse-growth durability and real estate pipeline (multiple questions), the renewal-rate/digital-membership-mix dynamic, SG&A leverage and what's masking productivity gains, retail media/AI roadmap, and nonfood comp deceleration versus gift-card lapping. The underlying anxiety, never stated outright: is Costco's growth machine (membership + traffic + new units) starting to show its first cracks — slowing paid-member growth, a stickier renewal-rate drag, and margin headwinds from healthcare — even as headline comps hold steady."
+---
+
+# COST — fiscal 2026-Q1 call (2025-12-11)
+
+**The key idea:** Costco delivered another quarter of steady, broad-based 6.4% comps and 13.6% adjusted EPS growth, but the call was really about defending the narrative of "consistency" against a handful of quieter decelerations — slowing paid-member growth, a renewal rate dragged down by younger digital sign-ups, nonfood comps cycling down from double digits, and healthcare costs eating into SG&A leverage for the first time. Management's answer to all of it is the same playbook: real estate expansion, AI-driven productivity, and digital/personalization investment, funded by a growing $6.5B capex plan, with price investment (via Kirkland Signature) as the non-negotiable constant.
+
+## The read — 3-5 points from the whole transcript
+1. **Growth is real but management is working hard to smooth the story.** CFO Gary Millerchip repeatedly reframed month-to-month volatility as noise — "sometimes there's a bit of fixation on individual month or one particular point of data" — while conceding underlying decelerations in both nonfood comps and total paid-member growth are real, just not alarming to them.
+2. **Real estate, not demand, is the binding constraint on growth.** FY26 net openings were cut from a 30+ target to 28 specifically because of "delays with a couple of our buildings in Spain" — a hard admission that permitting/construction timelines, not member appetite, cap expansion pace. The response is organizational (expanded real estate team) and creative (converted hypermarts, refurbished home-improvement boxes, an LA project stacking affordable housing above a warehouse).
+4. **The renewal-rate story is a demographic mix effect, not member dissatisfaction — but it's not fixed yet.** Millerchip was unusually transparent: digitally-signed-up members "renew at a slightly lower rate," and as they become a bigger share of the base, the blended renewal rate mechanically declines. Early targeted-communication efforts softened the decline this quarter, but he explicitly hedged that "the next couple of quarters could still show a slight decline."
+5. **SG&A leverage was masked, not lost.** A four-basis-point prior-year tax assessment charge plus healthcare costs outpacing sales growth "for the first time" pushed reported SG&A one basis point negative — but stripping those two items out, the underlying productivity work (largely from tech-enabled checkout speed gains) would have shown "mid-single-digit or so positive leverage."
+
+## Economy & consumer
+- **Traffic and ticket grew in lockstep** (3.1% and 3.2% worldwide) rather than one carrying the other, a sign of balanced rather than inflation-driven growth.
+- **Fresh/meat showed a barbell, not a trade-down.** "Strong growth in higher-cost cuts of beef and even greater unit growth in lower-cost proteins like ground beef and poultry" — both ends of the protein aisle grew, undercutting a simple trade-down narrative.
+- **Inflation is a wash of offsetting commodities.** Beef, seafood, and coffee inflationary; eggs, cheese, butter, and produce deflationary or decelerating — net inflation "relatively consistent with recent quarters," and management would not attribute ticket growth cleanly to inflation vs. unit growth vs. bigger pack sizes.
+- **Tariff mitigation is active and structural**, not just cost-absorption: changing country of production, sourcing more domestically, consolidating global buying, and leaning into Kirkland Signature "where we have more control over the supply chain" — with a narrower holiday SKU count as a direct consequence.
+
+## The business — what's working, what's not
+- **Working: checkout technology delivering measurable productivity.** Prescan adoption cut checkout time up to 20% at first-adopter warehouses, and US warehouses hit "record levels of checkout productivity" late in the quarter — a rare case of a retailer quantifying tech ROI on the floor.
+- **Working: digital engagement metrics are accelerating sharply.** Site traffic up 24%, app traffic up 48%, digitally-enabled comps at 20.5% — well ahead of the 6.4% blended comp, with personalization-driven recommendations showing "very positive" sales lift.
+- **Not working / under pressure: healthcare costs outpacing sales for the first time**, a new and less controllable SG&A headwind layered on top of the March wage agreement and extended-hours costs.
+- **Not working / decelerating: nonfood comp growth**, down from low-double-digit into mid-single-digit range as gift-card and gold sales lap tough prior-year comps — management frames this as expected cycling, but it's a real deceleration in the highest-margin-mix category.
+- **Ambiguous: renewal rate softness**, down 10bps to 92.2% (US/Canada) and 89.7% (worldwide) — attributed to mix, not member dissatisfaction, but not yet reversed.
+
+## Investing & scarcity
+- **Capex stepping up to ~$6.5B for the year**, funding more warehouse openings, remodels, depot expansion, and digital — an explicit increase in investment intensity versus prior years' pace.
+- **Real estate is the actual bottleneck.** The Spain delays and the need to expand the real estate team to sustain 30+ opens/year confirm that site availability and permitting, not capital or demand, gate the growth rate.
+- **Retail media still described as early-stage**, layered on top of an already-large alternative-profit base (travel, co-brand card, traditional media) that Millerchip flags as a differentiator versus how other retailers frame "retail media" — most of the eventual media revenue is earmarked to be reinvested into lower member prices, not margin.
+
+## Where they think it's going vs what they're doing about it
+- **Belief: digital sales will keep outpacing warehouse sales long-term.** Action matches belief — pay-ahead pharmacy, online cake/deli ordering, and continued app/personalization investment are explicitly named as near-term roadmap items, not just aspirations.
+- **Belief: renewal rate decline is temporary and reversible.** Action so far is limited to targeted communications to expiring digital members — a real but modest intervention relative to the scale of the demographic mix shift; management itself flagged this as "early days."
+- **Belief: 30+ warehouses/year is sustainable for years.** Backed concretely by an expanded real estate team and non-traditional site strategies (conversions, refurbishments, mixed-use projects) — one of the clearest talk-matches-action pairings on the call.
+- **Gap:** management projects continued strong membership growth but conceded overall paid-member growth "has slowed a little" and offered no specific new lever beyond existing initiatives (extended hours, Instacart benefit, 5% gas cashback) to reaccelerate it — the belief in continued strength outruns any newly funded action.
+
+## Hedges — what they wouldn't commit to
+- **No percentage-of-members-engaging-digitally metric** was offered despite a direct analyst request — traffic/app growth rates were given instead, a proxy rather than the actual number asked for.
+- **No timeline for when nonfood comps "lap" the gift-card/gold compare**, and no comment on whether that would coincide with early-2026 tax refunds — Millerchip stated plainly, "we generally don't provide sort of comments on on forward looking what we would expect."
+- **No firm call on the renewal rate trajectory** — explicitly left open the possibility of further decline over "the next couple of quarters."
+- **No specific ROI or dollar figures for personalization/AI initiatives** — described only in terms of "member experience" and directional sales lift, not quantified.
+
+## The street — what analysts asked
+- **Real estate and warehouse-growth durability dominated the queue** — multiple questions on US and international pipeline, remodel philosophy, and long-term unit potential, reflecting the market's focus on Costco's core growth engine rather than near-term comps.
+- **Membership economics were the second cluster** — renewal rate softness, executive-membership upgrade pace, and slowing total paid-member growth, probing whether the flywheel is decelerating structurally or just cycling.
+- **SG&A leverage and cost absorption** drew scrutiny on whether productivity gains can keep offsetting wage, extended-hours, and now healthcare cost pressure.
+- **AI, retail media, and digital engagement** were treated as forward-looking upside questions rather than areas of concern.
+- **Dodged/deflected:** specific digital-engagement percentages, forward comp guidance on nonfoods lapping tough compares, and any firm renewal-rate forecast — the compressed worry underneath it all: is Costco's flywheel (traffic, membership growth, renewal, nonfood momentum) quietly losing a step across several dimensions at once, just slowly enough that no single metric forces the market to react.

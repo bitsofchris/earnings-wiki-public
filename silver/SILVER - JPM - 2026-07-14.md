@@ -1,0 +1,53 @@
+---
+ticker: JPM
+call_date: 2026-07-14
+report_quarter: 2026-Q3
+period_reported: fiscal 2026-Q2
+source: bronze/JPM/2026-Q3/transcript-2026-07-14.md
+generated: 2026-07-30 (automated silver pass, schema v2)
+mentions: [BFI]
+answers:
+  economy: "Capital-markets boom (equities +86% YoY, IB fees up double digits) explicitly framed as a non-repeatable mix of large IPOs, index rebalancing, and unusual Korean equity dynamics, with some IB strength reflecting pulled-forward deal closings."
+  business: "Core banking healthy — wholesale deposits beat expectations on loan growth in BFI/data-center lending — but expense guidance rose $2.5B, mostly tied directly to the revenue beat (~77% marginal margin), undercutting analyst 'negative operating leverage' concerns."
+  investing: "Capital bias shifting from buybacks toward organic/inorganic investment (global remilitarization, hyperscaler/data-center infrastructure, trade restructuring); CIB shifted equity capital from corporate into markets to fund client financing growth; ~$40B prior 'excess capital' largely deployed."
+  scarcity: "AI-adjacent CapEx and lending are bleeding into non-obvious loan categories, making it hard to isolate an 'AI CapEx cycle'; token expense (still trivial) expected to accelerate meaningfully in H2, prompting routing to cheaper/open-source models for low-stakes tasks."
+  forward: "Dimon insists AI efficiency gains will pass through to customers, not stick to margins, drawing a 20-year computerization parallel; total CapEx sized at ~$4T/year with AI-specific spend roughly doubling YoY and still growing."
+  acting: "~1,000 internal AI use cases (~50 high-value) in risk, fraud, marketing, hedging, prospecting; some job cuts of 30-40% in discrete areas with most staff redeployed; a narrow 'smart cash' deposit/investment tool launching this year; Chase UK (~2.5-3M customers) and Berlin expansion continuing as long-horizon platform bets, still not quite profitable in Germany."
+  hedges: "CEO succession 'timeline unchanged' was repeated without ever stating what the timeline is, despite Marianne Lake's retirement following the co-president elevation of Doug and Troy; no specifics given on desired successor qualities beyond values language."
+  contradictions: "Dimon accused regulators of manipulating capital math via double-counting in operational/market-risk capital and a short-term wholesale funding rule that disproportionately burdens combined markets/banking/consumer banks; Barnum flagged negative real wages as a 'watch area' for a consumer cohort after downplaying Lake's prior distress comment."
+  street: "Whether succession is really 'no change' given Lake's exit; whether this quarter's trading/IB results are peak-cycle or a durable plateau and whether expenses can ever show sustained positive operating leverage; why buy back stock at 3x tangible book instead of hoarding capital; whether AI efficiency gains will ever show up as margin; whether deposit betas and consumer resilience hold if rates rise."
+---
+
+# JPM — fiscal 2026-Q2 call (2026-07-14)
+
+**The key idea:** JPM is riding a capital-markets boom it openly says can't repeat — equities revenue nearly doubled and IB fees jumped double digits across the board — while simultaneously managing a CEO succession that just cost them a president, defending its capital ratios from regulators it accuses of gaming the math, and quietly building the cost discipline (token spend, AI headcount cuts) it'll need once the exceptional quarter normalizes.
+
+## Where they're going / what they're building
+
+- **AI is framed as a margin pass-through, not a moat.** Dimon repeatedly rejected the idea that AI efficiency gains stick to JPM's bottom line: "the ultimate beneficiary of AI will be our customers" — because competitors get the same tools, gains get competed away. He drew the parallel to 20 years of computerization not lifting margins to 80%. This is a notably different framing than most companies give the AI-efficiency story, and worth flagging for readers tracking how AI infra spend actually shows up in unit economics.
+- **Token spend is "trivial" now but is being explicitly tracked as a future cost line.** Barnum disclosed they expect "meaningful acceleration" in token expense in the second half, still immaterial for the full year, but treated as a real emerging budget category — with a stated strategy of routing to cheaper/open-source models for lower-stakes tasks ("you really don't need the latest cutting edge incredibly expensive model to summarize an analyst report").
+- **~1,000 internal AI use cases, ~50 called out as high-value**, concentrated in risk, fraud, marketing, hedging, prospecting, note-taking, document reading — and some job cuts already happened in "discrete areas" of 30-40%, with most displaced staff redeployed internally.
+- **A "smart cash" deposit/investment tool is coming this year**, targeted narrowly at accounts where JPM competes for both deposit and investment wallet share — explicitly a live test case for how deposit economics evolve as money becomes more mobile.
+- **Europe is being built as a long-horizon digital-bank platform bet.** Chase UK has ~2.5-3 million customers after roughly five years; Berlin/Germany expansion is "not quite profitable yet." Dimon's framing: "the dream would be that it'd be a pan-European successful digital bank building off of JPMorgan Chase's strengths," built on the logic that platform costs amortize as more countries/products get added (investment products already added in the UK, credit card next).
+- **CEO succession moved forward but Dimon insists the timeline hasn't changed** — Doug and Troy were elevated to co-presidents, and Marianne Lake chose to retire rather than stay under the new structure. Dimon repeatedly deflected on specifics ("several years, plus or minus... totally up to the board").
+- **Capital deployment bias is shifting from buybacks toward organic and inorganic investment.** With ~$40B of prior "excess capital" largely deployed, Dimon pointed to global remilitarization, hyperscaler/data-center infrastructure, and trade restructuring as absorbing capital, and was explicit that "buying back stock is not returning money to shareholders" — it's an investment decision he's ambivalent about relative to organic growth or M&A.
+
+## What's changing
+
+- **Expense guidance rose $2.5B for the year, but ~$1.5B of that is already booked and directly tied to the revenue beat** — Barnum's math implies roughly 77% marginal margin on the capital-markets outperformance, undercutting the "negative operating leverage" framing analysts kept pushing on.
+- **CIB capital allocation increased this quarter**, shifting equity out of corporate and into markets to support client financing growth — a mechanical side effect is that markets NII rises independent of rates, which Barnum flagged as one of the rare cases where markets NII moves aren't offset elsewhere on the P&L.
+- **Wholesale deposit growth outperformed expectations**, partly attributed to loan growth in the "BFI space and a lot of the data center stuff" — lending creating deposits, a dynamic JPM expects to keep tailwinding wholesale balances.
+- **AI-adjacent CapEx and lending are bleeding into "non-obvious places."** Barnum's plumbers-and-electricians analogy: loan growth that doesn't superficially look AI-related may still be AI-driven demand, making it hard to cleanly separate an "AI CapEx cycle" from the rest of the economy. Dimon sized total CapEx at roughly $4 trillion/year, with AI-specific spend roughly doubling year over year and projected to grow further, alongside a possible pullback in non-AI CapEx.
+- **Credit underwriting is loosening at the margins, not broadly** — Dimon flagged more PIK, weaker covenants, and more rollover-rate risk concentrated in "some players," with data-center financing singled out as the bellwether where JPM has walked away from deals over power-supply and tenant risk. Notably, some data-center lending is happening as relationship lending to startup-stage entities.
+
+## What's NOT working (or being talked around)
+
+- **Succession specifics were dodged twice.** Asked directly what timeline "unchanged" means and what qualities the board wants in the next CEO, Dimon gave values-language ("heart," "soul," "grit") rather than a process or date, and repeated that the timetable is unchanged without ever stating what it is.
+- **Regulators are accused of manipulating capital math, not just being strict.** Dimon: "They should not do the numbers in a false way to make the number higher... I'm not happy to have these numbers falsely done" — specifically citing double-counting in operational and market-risk capital, and a short-term wholesale funding rule change that Barnum says disproportionately burdens banks with combined markets/banking/consumer businesses versus pure investment-bank competitors.
+- **This quarter's equities strength (+86% YoY) is explicitly framed as unrepeatable** — Barnum attributed it to a specific, non-recurring combination of large IPOs, index rebalancing, and unusual Korean equity market dynamics, and separately flagged that IB fee strength partly reflects "pull forward" and accelerated deal closings that may cannibalize future quarters.
+- **No mention of any AI product actually shipping to customers at scale** — despite ~1,000 use cases cited, the concrete customer-facing example offered (smart cash) is still a narrow pilot with no rollout numbers, a conspicuous gap for a bank this vocal about AI investment.
+- **Negative real wage growth for a consumer cohort was raised, then minimized** — Barnum acknowledged Lake's prior comment about distress among consumers facing negative real wages, then immediately downplayed it as "probably a watch area" and statistically always somewhat true, without offering size or trend data.
+
+## Street anxiety (compressed)
+
+Whether the succession announcement is really "no change" given Marianne Lake's exit and what specifically the board wants in a successor · whether this quarter's exceptional trading and IB results are peak-cycle noise or the start of a durable higher plateau, and whether the expense base can ever produce sustained positive operating leverage as opposed to just tracking revenue · why buy back stock at 3x tangible book instead of hoarding capital for a downturn · whether AI-driven efficiency gains will ever show up as margin rather than being competed away · whether deposit betas and consumer resilience hold if rates move meaningfully higher. Underneath all of it: is JPM's current performance the new normal, or the top.
