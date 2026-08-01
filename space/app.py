@@ -149,25 +149,25 @@ with gr.Blocks(title="Earnings Wiki") as demo:
                                            "What are companies saying versus what are they actually doing?"])
     with gr.Tab("About"):
         gr.Markdown("""
-Earnings calls are the most information-dense public statements companies make — executives on the record,
-grilled by professionals who are paid to be skeptical.
+**What this is:** 434 earnings calls from 125 large-cap US companies (Nasdaq-100 + Dow 30 + extras),
+October 9, 2025 through July 30, 2026, analyzed with the same ten questions per call and turned into a
+browsable theme graph and a chat you can query.
 
-This project reads a set of them (~130 big caps, every quarter) and **extracts specific ideas through fixed
-lenses** — what's scarce, what they believe vs. what they fund, what they dodged, what analysts pressed on —
-instead of summarizing. Intent-based extraction beats generic LLM summaries: the same questions asked of every
-company every quarter produce *comparable atoms*.
+**The pipeline:** transcript → one LLM analysis per call answering ten fixed questions (what's scarce,
+what they believe vs. what they fund, what analysts pressed on, what they dodged, ...) → every claim
+becomes an atom (10,667 of them) → atoms are embedded and clustered into 142 cross-company themes,
+each titled and summarized by an LLM.
 
-Those atoms become a **knowledge graph** (embeddings + k-means themes). A theme only counts when **multiple
-companies** converge on it — one company restating a point five ways is deduped to one claim per quarter.
-The replay slider shows themes forming over four quarters. The chat answers from the same corpus: it first
-extracts your filters (tickers, sector, time range, question lens), runs the scoped query locally, and cites
-what it used.
+**What you're looking at:** in the graph, each sphere is a theme; its size is how many *distinct
+companies* touch it — one company restating a point five ways counts once per quarter, and a theme
+under three companies is dropped. The replay slider shows themes forming over the four quarters.
+Click a theme for its summary and the underlying claims. The chat answers from the same corpus: it
+extracts your filters (tickers, sector, time range, question lens), runs the scoped query locally,
+and cites what it used as [TICKER date].
 
-Things to try: *what new themes emerged this year? · which themes went quiet? · what's the most common thing
-analysts asked about? · which companies contradict each other? · what does everyone say is scarce?*
-
-Transcripts via Yahoo Finance through the open `defeatbeta/yahoo-finance-data` mirror. Everything here is
-AI-generated, can contain errors, and is not investment advice.
+Transcripts via Yahoo Finance through the open `defeatbeta/yahoo-finance-data` mirror. Raw transcripts
+are not republished — only derived analysis with brief quotes. Everything here is AI-generated, can
+contain errors, and is not investment advice.
 """)
 
 if __name__ == "__main__":
