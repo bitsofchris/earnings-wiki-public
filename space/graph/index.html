@@ -30,6 +30,11 @@
 <div id="graph"></div>
 <div id="hud">
   <h1>earnings-wiki · themes over time</h1>
+  <label>View</label>
+  <select id="view">
+    <option value="themes" selected>themes (clustered atoms)</option>
+    <option value="atoms">atoms (every claim)</option>
+  </select>
   <label>Color by</label>
   <select id="facet">
     <option value="section">section (question)</option>
@@ -48,9 +53,16 @@
 <div id="timeline"><div id="tlabel"></div><input type="range" id="tslider" min="0" max="100" value="100" style="width:100%"></div>
 <script>
 (async () => {
-  const [nodesR, edgesR] = await Promise.all([fetch('nodes.json'), fetch('edges.json')]);
+  const [nodesR, edgesR, clustersR] = await Promise.all(
+    [fetch('nodes.json'), fetch('edges.json'), fetch('clusters.json')]);
   const NODES = (await nodesR.json()).nodes;
   const EDGES = (await edgesR.json()).edges;
+  const CJ = await clustersR.json();
+  const CLUSTERS = CJ.clusters, CEDGES = CJ.clusterEdges;
+  const byId = Object.fromEntries(NODES.map(n => [n.id, n]));
+  const clusterById = Object.fromEntries(CLUSTERS.map(c => [c.id, c]));
+  CLUSTERS.forEach(c => { c.kind = 'cluster'; c.members = c.memberIds.map(id => byId[id]); c.count = c.members.length; });
+
   const dates = [...new Set(NODES.map(n => n.call_date))].sort();
   const palette = ['#5b8ff9','#61ddaa','#f6bd16','#f08bb4','#7262fd','#78d3f8','#9661bc','#f6903d','#e8684a','#6dc8ec','#9ac94f','#d3cef6'];
   const colorMaps = {};
@@ -61,50 +73,114 @@
   document.getElementById('fsector').innerHTML += facetVals('sector').map(s => `<option>${s}</option>`).join('');
   const deg = {}; EDGES.forEach(e => { deg[e.sourceId] = (deg[e.sourceId]||0)+1; deg[e.targetId] = (deg[e.targetId]||0)+1; });
 
-  let facet = 'sector', fsector = '', minsim = 0.42, tIdx = dates.length - 1;
+  // adjacency (strongest first), used to seed newly-appearing nodes near their neighborhood
+  const adj = {};
+  const addAdj = (a, b, w) => { (adj[a] = adj[a] || []).push([b, w]); (adj[b] = adj[b] || []).push([a, w]); };
+  EDGES.forEach(e => addAdj(e.sourceId, e.targetId, e.weight));
+  CEDGES.forEach(e => addAdj(e.sourceId, e.targetId, e.weight));
+  // low-weight member↔cluster links: a fallback seed position (an atom lands near its
+  // theme, a theme near its atoms) when nothing closer is placed yet
+  CLUSTERS.forEach(c => c.memberIds.forEach(m => addAdj(m, c.id, 0.01)));
+  Object.values(adj).forEach(l => l.sort((a, b) => b[1] - a[1]));
+  const ALL = [...NODES, ...CLUSTERS];
+
+  let view = 'themes', facet = 'sector', fsector = '', minsim = 0.42, tIdx = dates.length - 1;
   const G = ForceGraph3D()(document.getElementById('graph'))
     .width(window.innerWidth).height(window.innerHeight)
     .backgroundColor('#0b0d12')
-    .nodeLabel(n => `<b>${n.ticker}</b> ${n.call_date} · ${n.section}<br>${n.name}`)
+    .nodeLabel(n => n.kind === 'cluster'
+      ? `<b>${n.label}</b><br>theme · ${n.count} atoms · mostly ${n.sector}${n.terms ? '<br><i>' + n.terms.join(' · ') + '</i>' : ''}`
+      : `<b>${n.ticker}</b> ${n.call_date} · ${n.section}<br>${n.name}`)
     .nodeColor(n => colorMaps[facet][n[facet]] || '#888')
-    .nodeVal(n => 1 + Math.min(8, (deg[n.id]||0)))
+    .nodeVal(n => n.kind === 'cluster' ? 3 + Math.min(60, n.count) : 1 + Math.min(8, (deg[n.id]||0)))
     .linkOpacity(0.25)
     .linkWidth(l => (l.weight - 0.3) * 3)
-    .onNodeClick(n => showPanel(n));
+    .onNodeClick(n => n.kind === 'cluster' ? showClusterPanel(n) : showPanel(n));
 
+  // The same node objects are handed to the graph on every refresh, so d3 keeps
+  // their x/y/z between ticks. Brand-new nodes are seeded at their strongest
+  // already-placed neighbor so they pop in near their neighborhood, not at the origin.
+  const anyById = id => byId[id] || clusterById[id];
+  function seedIfNew(n) {
+    if (n.x !== undefined) return n;
+    const nb = (adj[n.id] || []).find(([m]) => { const o = anyById(m); return o && o.x !== undefined; });
+    if (nb) {
+      const o = anyById(nb[0]);
+      const j = () => (Math.random() - 0.5) * 24;
+      n.x = o.x + j(); n.y = o.y + j(); n.z = o.z + j();
+    }
+    return n;
+  }
+  function freezeShown() { G.graphData().nodes.forEach(n => { if (n.x !== undefined) { n.fx = n.x; n.fy = n.y; n.fz = n.z; } }); }
+  function unfreezeAll() { ALL.forEach(n => { delete n.fx; delete n.fy; delete n.fz; }); }
+
+  const passes = m => !fsector || m.sector === fsector;
   function visible() {
     const maxDate = dates[tIdx];
-    const ns = NODES.filter(n => n.call_date <= maxDate && (!fsector || n.sector === fsector));
+    if (view === 'atoms') {
+      const ns = NODES.filter(n => n.call_date <= maxDate && passes(n)).map(seedIfNew);
+      const ids = new Set(ns.map(n => n.id));
+      const ls = EDGES.filter(e => e.weight >= minsim && ids.has(e.sourceId) && ids.has(e.targetId))
+                      .map(e => ({source: e.sourceId, target: e.targetId, weight: e.weight}));
+      return {nodes: ns, links: ls};
+    }
+    const ns = [];
+    for (const c of CLUSTERS) {
+      c.count = c.members.reduce((s, m) => s + (m.call_date <= maxDate && passes(m) ? 1 : 0), 0);
+      if (c.count) ns.push(seedIfNew(c));
+    }
     const ids = new Set(ns.map(n => n.id));
-    const ls = EDGES.filter(e => e.weight >= minsim && ids.has(e.sourceId) && ids.has(e.targetId))
-                    .map(e => ({source: e.sourceId, target: e.targetId, weight: e.weight}));
-    return {nodes: ns.map(n => ({...n})), links: ls};
+    const ls = CEDGES.filter(e => e.weight >= minsim && ids.has(e.sourceId) && ids.has(e.targetId))
+                     .map(e => ({source: e.sourceId, target: e.targetId, weight: e.weight}));
+    return {nodes: ns, links: ls};
   }
   function refresh() {
     const d = visible();
     G.graphData(d);
     document.getElementById('tlabel').textContent = `≤ ${dates[tIdx]}`;
-    const q = {}; d.nodes.forEach(n => q[n.quarter] = (q[n.quarter]||0)+1);
-    document.getElementById('stats').textContent =
-      `${d.nodes.length} atoms · ${d.links.length} edges\n` +
-      Object.entries(q).sort().map(([k,v]) => `${k}: ${v} atoms`).join('\n');
+    let stats;
+    if (view === 'atoms') {
+      const q = {}; d.nodes.forEach(n => q[n.quarter] = (q[n.quarter]||0)+1);
+      stats = `${d.nodes.length} atoms · ${d.links.length} edges\n` +
+        Object.entries(q).sort().map(([k,v]) => `${k}: ${v} atoms`).join('\n');
+    } else {
+      const atoms = d.nodes.reduce((s, c) => s + c.count, 0);
+      stats = `${d.nodes.length} themes · ${atoms} atoms · ${d.links.length} links\nnode size = atoms in theme · click for members`;
+    }
+    document.getElementById('stats').textContent = stats;
   }
   function showPanel(n) {
     const p = document.getElementById('panel'); p.style.display = 'block';
     const nbrs = EDGES.filter(e => (e.sourceId === n.id || e.targetId === n.id) && e.weight >= minsim)
       .map(e => ({id: e.sourceId === n.id ? e.targetId : e.sourceId, w: e.weight}))
       .sort((a,b) => b.w - a.w).slice(0, 8)
-      .map(x => ({...NODES.find(m => m.id === x.id), w: x.w})).filter(x => x.id);
+      .map(x => ({...byId[x.id], w: x.w})).filter(x => x.id);
     p.innerHTML = `<h2>${n.name}</h2><div class="meta">${n.ticker} · ${n.call_date} · ${n.section} · [[${n.note}]]</div>
       <div>${n.description}</div>
       <div class="neighbors"><b>nearest claims:</b>${nbrs.map(m =>
         `<div data-id="${m.id}">${m.w.toFixed(2)} · <b>${m.ticker}</b> ${m.name}</div>`).join('')}</div>`;
+    wirePanelClicks(p);
+  }
+  function showClusterPanel(c) {
+    const p = document.getElementById('panel'); p.style.display = 'block';
+    const maxDate = dates[tIdx];
+    const members = c.members.filter(m => m.call_date <= maxDate && passes(m))
+      .sort((a, b) => (deg[b.id]||0) - (deg[a.id]||0)).slice(0, 12);
+    p.innerHTML = `<h2>${c.label}</h2>
+      <div class="meta">theme · ${c.count} atoms · mostly ${c.sector}${c.terms ? ' · ' + c.terms.join(', ') : ''}</div>
+      <div>${byId[c.repId].description}</div>
+      <div class="neighbors"><b>atoms in this theme:</b>${members.map(m =>
+        `<div data-id="${m.id}"><b>${m.ticker}</b> ${m.call_date} · ${m.name}</div>`).join('')}</div>`;
+    wirePanelClicks(p);
+  }
+  function wirePanelClicks(p) {
     p.querySelectorAll('[data-id]').forEach(el => el.onclick = () => {
-      const m = NODES.find(x => x.id === el.dataset.id); if (m) showPanel(m);
+      const m = byId[el.dataset.id]; if (m) showPanel(m);
     });
   }
+  document.getElementById('view').onchange = e => { view = e.target.value; unfreezeAll(); refresh(); };
   document.getElementById('facet').onchange = e => { facet = e.target.value; G.nodeColor(n => colorMaps[facet][n[facet]] || '#888'); };
-  document.getElementById('fsector').onchange = e => { fsector = e.target.value; refresh(); };
+  document.getElementById('fsector').onchange = e => { fsector = e.target.value; unfreezeAll(); refresh(); };
   document.getElementById('minsim').oninput = e => { minsim = +e.target.value; refresh(); };
   const slider = document.getElementById('tslider');
   slider.max = dates.length - 1; slider.value = tIdx;
@@ -112,10 +188,11 @@
   let playing = null;
   document.getElementById('play').onclick = () => {
     if (playing) { clearInterval(playing); playing = null; document.getElementById('play').textContent = '▶ replay'; return; }
-    tIdx = 0; slider.value = 0; refresh();
+    tIdx = 0; slider.value = 0; freezeShown(); refresh();
     document.getElementById('play').textContent = '⏸ pause';
     playing = setInterval(() => {
       if (tIdx >= dates.length - 1) { clearInterval(playing); playing = null; document.getElementById('play').textContent = '▶ replay'; return; }
+      freezeShown();          // dots already on screen stay put; only newcomers settle in
       tIdx++; slider.value = tIdx; refresh();
     }, 350);
   };
