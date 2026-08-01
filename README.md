@@ -19,8 +19,8 @@ A structured, longitudinal corpus of large-cap earnings calls — four quarters 
 ## What's here
 
 - **`silver/`** — 434 per-call analysis notes (markdown + YAML frontmatter). Each answers: economy · consumer · business · investing · scarcity · forward (beliefs) · acting (commitments) · hedges (what they wouldn't commit to) · contradictions · street (what analysts pressed on). Style: numbers only as deltas, verbatim quotes attributed to executives, honesty about spin.
-- **`graph/`** — every claim as an atom (10.7k nodes), embedded (OpenAI text-embedding-3-small) and linked to its nearest claims across companies (63k cosine k-NN edges). `index.html` is a self-contained 3D explorer (three.js via 3d-force-graph) with a time-replay slider — open it over any static server.
-- **`space/`** — a Hugging Face Space app (Gradio) to chat with the corpus using a free hosted LLM: local BM25 retrieval over 4.5k question-aligned fragments + HF Inference API generation.
+- **`graph/`** — every claim as an atom (10.7k nodes), embedded (OpenAI text-embedding-3-small) and linked to its nearest claims across companies (63k cosine k-NN edges). `build_clusters.py` rolls atoms into cross-company themes (k-means + LLM-written summaries). `index.html` is a self-contained 3D explorer (three.js via 3d-force-graph) with a time-replay slider — open it over any static server. Pipeline rules and rebuild steps: [docs/graph-pipeline.md](docs/graph-pipeline.md).
+- **`space/`** — a Hugging Face Space app (Gradio) to chat with the corpus using a free hosted LLM: filter extraction (symbols / sector / time / question lens) → scoped local retrieval (`query.py`, also a CLI) → cited generation via the HF Inference API.
 
 ## Provenance
 

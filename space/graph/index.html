@@ -110,9 +110,10 @@
   const G = ForceGraph3D()(document.getElementById('graph'))
     .width(window.innerWidth).height(window.innerHeight)
     .backgroundColor('#0b0d12')
+    .nodeRelSize(5)
     .nodeLabel(n => n.kind === 'cluster'
-      ? `<b>${n.label}</b><br>theme · ${n.count} companies · ${n.nAtoms} claims · mostly ${n.sector}${n.terms ? '<br><i>' + n.terms.join(' · ') + '</i>' : ''}`
-      : `<b>${n.ticker}</b> ${n.call_date} · ${n.section}<br>${n.name}`)
+      ? `<b>${n.title || n.label}</b><br>theme · ${n.count} companies · ${n.nAtoms} claims · mostly ${n.sector}${n.terms ? '<br><i>' + n.terms.join(' · ') + '</i>' : ''}`
+      : `<b>${n.ticker}</b> ${n.call_date} · ${n.section}<br>${claimText(n, 140)}`)
     .nodeColor(n => colorMaps[facet][n[facet]] || '#888')
     .nodeVal(n => n.kind === 'cluster' ? 2 + Math.min(28, 2 * Math.sqrt(n.count)) : 1 + Math.min(8, (deg[n.id]||0)))
     .linkOpacity(0.25)
@@ -148,6 +149,15 @@
   }
   function freezeShown() { G.graphData().nodes.forEach(n => { if (n.x !== undefined) { n.fx = n.x; n.fy = n.y; n.fz = n.z; } }); }
   function unfreezeAll() { ALL.forEach(n => { delete n.fx; delete n.fy; delete n.fz; }); }
+
+  // ~10% of atoms carry a section-scaffold name ("What's not working / left
+  // ambiguous") instead of a claim — show the description's substance instead
+  const SCAFFOLD = /^(what'?s\b|the read\b|belief:?$|action:?$|numbers\b|surprises\b|themes\b|hedges\b|guidance\b|the street\b|where they)/i;
+  const claimText = (m, len = 110) => {
+    const bad = SCAFFOLD.test(m.name.trim()) || m.name.trim().split(/\s+/).length < 3;
+    const t = bad ? m.description : m.name;
+    return t.length > len ? t.slice(0, len) + '…' : t;
+  };
 
   const passes = m => !fsector || m.sector === fsector;
   function visible() {
@@ -200,7 +210,7 @@
     p.innerHTML = `${panelHeader()}<h2>${n.name}</h2><div class="meta">${n.ticker} · ${n.call_date} · ${n.section} · [[${n.note}]]</div>
       <div>${n.description}</div>
       <div class="neighbors"><b>nearest claims:</b>${nbrs.map(m =>
-        `<div data-id="${m.id}">${m.w.toFixed(2)} · <b>${m.ticker}</b> ${m.name}</div>`).join('')}</div>`;
+        `<div data-id="${m.id}">${m.w.toFixed(2)} · <b>${m.ticker}</b> ${claimText(m)}</div>`).join('')}</div>`;
     wirePanelClicks(p);
   }
   function showClusterPanel(c) {
@@ -208,11 +218,11 @@
     const maxDate = dates[tIdx];
     const members = c.members.filter(m => m.call_date <= maxDate && passes(m))
       .sort((a, b) => (deg[b.id]||0) - (deg[a.id]||0)).slice(0, 12);
-    p.innerHTML = `${panelHeader()}<h2>${c.label}</h2>
+    p.innerHTML = `${panelHeader()}<h2>${c.title || c.label}</h2>
       <div class="meta">theme · ${c.count} companies · ${c.nAtoms} claims · mostly ${c.sector}${c.terms ? ' · ' + c.terms.join(', ') : ''}</div>
-      <div>${byId[c.repId].description}</div>
-      <div class="neighbors"><b>atoms in this theme:</b>${members.map(m =>
-        `<div data-id="${m.id}"><b>${m.ticker}</b> ${m.call_date} · ${m.name}</div>`).join('')}</div>`;
+      <div>${c.summary || byId[c.repId].description}</div>
+      <div class="neighbors"><b>claims in this theme:</b>${members.map(m =>
+        `<div data-id="${m.id}"><b>${m.ticker}</b> ${m.call_date} · ${claimText(m)}</div>`).join('')}</div>`;
     wirePanelClicks(p);
   }
   function wirePanelClicks(p) {

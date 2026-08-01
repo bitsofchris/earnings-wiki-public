@@ -37,6 +37,7 @@ import math
 import os
 import random
 import re
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MIN_MEMBERS = 4      # label-prop only: communities smaller than this stay unclustered
@@ -299,15 +300,74 @@ def label_prop_mode():
     return clusters, prune_edges(agg), {"method": "label-prop"}
 
 
+# ---------------------------------------------------------------- LLM theme summaries
+
+LABEL_PROMPT = """You name themes found in a corpus of earnings-call analyses. Below are claims
+from DISTINCT companies whose analyses clustered together. Reply with ONLY a JSON object:
+{"title": "...", "summary": "..."}
+- title: <= 10 words. A general statement of the SHARED pattern — never one company's
+  specifics, never a question, no ticker names.
+- summary: 2 sentences. What the pattern is, and how it varies across companies.
+  Name at most 2 tickers as examples.
+
+Claims:
+"""
+
+
+def llm_label(clusters, model, token):
+    """GraphRAG-style community summaries (the private pipeline's RULE TWO): a cluster
+    is described by an LLM synthesis of its members, never by one member's text.
+    Failures leave the medoid label in place — labeling must never break the build."""
+    from huggingface_hub import InferenceClient
+    client = InferenceClient(token=token)
+    done = 0
+    for c in clusters:
+        seen, lines = set(), []
+        for m in sorted(c["memberIds"], key=lambda i: by_id[i]["call_date"], reverse=True):
+            n = by_id[m]
+            if n["ticker"] in seen:
+                continue
+            seen.add(n["ticker"])
+            lines.append(f"- {n['ticker']}: {n['name']} — {n['description'][:200]}")
+            if len(lines) == 18:
+                break
+        for attempt in range(2):
+            try:
+                out = client.chat_completion(
+                    messages=[{"role": "user", "content": LABEL_PROMPT + "\n".join(lines)}],
+                    model=model, max_tokens=180, temperature=0)
+                m = re.search(r"\{.*\}", out.choices[0].message.content, re.S)
+                raw = json.loads(m.group(0))
+                title, summary = str(raw["title"]).strip(), str(raw["summary"]).strip()
+                if 0 < len(title) <= 90 and summary:
+                    c["title"], c["summary"] = title, summary
+                    done += 1
+                break
+            except Exception as e:
+                if attempt:
+                    print(f"  label failed for {c['id']} ({type(e).__name__}) — keeping medoid label", file=sys.stderr)
+        if done and done % 25 == 0:
+            print(f"  labeled {done}/{len(clusters)}")
+    print(f"LLM summaries: {done}/{len(clusters)} themes titled")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--embeddings", help="path to private embeddings.json (id -> {vec}); enables k-means mode")
+    ap.add_argument("--label", action="store_true",
+                    help="add LLM-written title+summary per theme (needs HF_TOKEN; model via LABEL_MODEL)")
     args = ap.parse_args()
 
     if args.embeddings:
         clusters, cluster_edges, meta = kmeans_mode(args.embeddings)
     else:
         clusters, cluster_edges, meta = label_prop_mode()
+
+    if args.label:
+        token = os.getenv("HF_TOKEN")
+        if not token:
+            raise SystemExit("--label needs HF_TOKEN (export HF_TOKEN=$(hf auth token))")
+        llm_label(clusters, os.getenv("LABEL_MODEL", "Qwen/Qwen2.5-7B-Instruct"), token)
 
     clusters.sort(key=lambda c: -len(c["memberIds"]))
     sizes = sorted((len(c["memberIds"]) for c in clusters), reverse=True)

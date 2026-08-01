@@ -129,7 +129,8 @@ class ThemeDigest(unittest.TestCase):
         text = q.format_themes(self.themes[:3])
         self.assertIn("[THEME", text)
         self.assertIn("companies", text)
-        self.assertIn("one company's wording", text)  # label semantics are explicit
+        for t in self.themes[:3]:  # LLM title when present, else the flagged medoid label
+            self.assertIn(t["title"] if t.get("title") else "one company's wording", text)
 
     def test_samples_are_distinct_companies_with_substance(self):
         for t in self.themes[:10]:

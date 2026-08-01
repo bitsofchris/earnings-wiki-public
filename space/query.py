@@ -179,6 +179,7 @@ def theme_digest(corpus, symbols=None, sector=None, since=None, until=None, top=
             trend = "steady"
         out.append({
             "id": c["id"], "label": c["label"], "terms": c.get("terms", []),
+            "title": c.get("title"), "summary": c.get("summary"),
             "n_tickers": len(tickers), "n_claims": len(ms),
             "top_tickers": [t for t, _ in tickers.most_common(6)],
             "per_quarter": {q: qc.get(q, 0) for q in quarters},
@@ -205,16 +206,22 @@ def _theme_samples(ms, n=4, trim=200):
 
 
 def format_themes(themes):
-    """Render a digest for LLM context (or terminal reading). The label is one
-    representative company's claim, never a general statement — say so."""
+    """Render a digest for LLM context (or terminal reading). Themes carry an
+    LLM-written title+summary (community summaries); when absent, fall back to the
+    medoid label — flagged as one company's wording, never a general statement."""
     lines = []
     for t in themes:
         pq = " ".join(f"{qq}:{n}" for qq, n in t["per_quarter"].items())
         new = "NEW THEME (did not exist at corpus start) — " if t["trend"] == "emerging" else ""
+        if t.get("title"):
+            head = (f"[THEME {t['id']}] {new}{t['title']} — {t['n_tickers']} companies\n"
+                    f"  {t['summary']}\n")
+        else:
+            head = (f"[THEME {t['id']}] {new}\"{t['label']}\" — one company's wording of a pattern "
+                    f"across {t['n_tickers']} companies\n")
         lines.append(
-            f"[THEME {t['id']}] {new}\"{t['label']}\" — one company's wording of a pattern "
-            f"across {t['n_tickers']} companies\n"
-            f"  {t['trend']} (Δshare {t['delta_share']:+}) · since {t['first_quarter']} · claims per quarter: {pq}\n"
+            head
+            + f"  {t['trend']} (Δshare {t['delta_share']:+}) · since {t['first_quarter']} · claims per quarter: {pq}\n"
             f"  companies: {', '.join(t['top_tickers'])}\n"
             + "".join(f"  · {s}\n" for s in t["samples"]))
     return "\n".join(lines)
