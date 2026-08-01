@@ -1,0 +1,6 @@
+- generic [active]:
+  - generic [ref=f1e1]: "Left-click: rotate, Mouse-wheel/middle-click: zoom, Right-click: pan"
+  - heading "earnings-wiki · themes over time ▸" [level=1] [ref=f1e21] [cursor=pointer]
+  - generic [ref=f1e13]:
+    - generic [ref=f1e20]: ≤ 2026-07-30
+    - slider [ref=f1e14]: "113"

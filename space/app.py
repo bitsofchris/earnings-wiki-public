@@ -7,6 +7,7 @@ import json
 import math
 import os
 import re
+import traceback
 from collections import Counter
 
 import gradio as gr
@@ -48,11 +49,21 @@ def chat(message, history):
     for h in history[-4:]:
         messages.append({"role": h["role"], "content": h["content"]})
     messages.append({"role": "user", "content": f"Context fragments:\n{context}\n\nQuestion: {message}"})
+    if not os.getenv("HF_TOKEN"):
+        return "HF_TOKEN is not set on this Space, so the model call can't authenticate."
     try:
         out = client.chat_completion(messages=messages, model=MODEL_ID, max_tokens=800, temperature=0.3)
         return out.choices[0].message.content
     except Exception as e:
-        return f"Model call failed ({type(e).__name__}) — the free Inference API may be rate-limited; try again shortly."
+        traceback.print_exc()  # full detail in the Space logs
+        status = getattr(getattr(e, "response", None), "status_code", None)
+        if status in (401, 403):
+            return ("Model call rejected (HTTP %s): the Space's HF_TOKEN is invalid or lacks the "
+                    "'Inference Providers' permission." % status)
+        if status == 402:
+            return "Model call rejected (HTTP 402): the account is out of inference credits for this billing period."
+        detail = str(e).split("\n")[0][:200]
+        return f"Model call failed ({type(e).__name__}{': ' + str(status) if status else ''}) — {detail}"
 
 with gr.Blocks(title="Earnings Wiki") as demo:
     gr.Markdown("# Earnings Wiki — talk to four quarters of earnings calls\n"
