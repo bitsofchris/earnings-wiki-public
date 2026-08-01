@@ -9,10 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Push to HF Space
+      - name: Push snapshot to HF Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        # push a single orphan commit (current tree only, no history) — HF's
+        # pre-receive hook scans the whole pushed history for binary files
         run: |
-          git push --force https://bitsofchris:$HF_TOKEN@huggingface.co/spaces/bitsofchris/earnings-wiki main
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git checkout --orphan hf-deploy
+          git add -A
+          git commit -m "Deploy ${GITHUB_SHA::9}"
+          git push --force https://bitsofchris:$HF_TOKEN@huggingface.co/spaces/bitsofchris/earnings-wiki hf-deploy:main
