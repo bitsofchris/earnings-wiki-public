@@ -47,6 +47,9 @@ SYSTEM = """You answer questions about public-company earnings calls using ONLY 
 Context contains claims tagged [TICKER date ...] and may contain theme-trend digests tagged [THEME id].
 
 Rules:
+- Lead with the signal. Open with the 2-4 strongest cross-company takeaways as short bold
+  statements (e.g. "**Memory is the new bottleneck, and it's driving price increases.**"),
+  then back each with named-company evidence.
 - Be concrete. Every point must name WHO said it, with specifics (numbers, quotes, products),
   cited inline as [TICKER date]. Never present a claim without attribution.
 - A theme's "representative claim" is ONE company's wording for a cross-company pattern — never
@@ -138,12 +141,12 @@ with gr.Blocks(title="Earnings Wiki") as demo:
                         f'<a href="{GRAPH_URL}" target="_blank">open full-screen</a></p>')
             with gr.Column(scale=2):
                 gr.ChatInterface(chat, type="messages", chatbot=gr.Chatbot(height=560, type="messages"),
-                                 examples=["What new themes emerged over the last year?",
-                                           "Which themes have gone quiet?",
-                                           "What constraint is binding each cloud provider?",
-                                           "Who raised capex guidance, and what reason did they give?",
-                                           "What did analysts press Apple on, and what got dodged?",
-                                           "Where do managements' beliefs diverge from what they're actually funding?"])
+                                 examples=["Where is the economy heading, according to management teams?",
+                                           "What's happening to the consumer right now?",
+                                           "What's getting scarce or more expensive?",
+                                           "Is anyone actually making money from AI yet?",
+                                           "Where is the money actually going — what are companies funding?",
+                                           "What are companies saying versus what are they actually doing?"])
     with gr.Tab("About"):
         gr.Markdown("""
 Earnings calls are the most information-dense public statements companies make — executives on the record,
