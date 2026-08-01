@@ -81,6 +81,22 @@ class Select(unittest.TestCase):
                             and f["question"] == "forward" for f in out))
 
 
+class SelectAtoms(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.c = q.load()
+
+    def test_scope_and_ranking(self):
+        out = q.select_atoms(self.c, sector="semis", since="2026-04-01", text="capacity constraint", k=8)
+        self.assertEqual(len(out), 8)
+        self.assertTrue(all(a["sector"] == "semis" and a["call_date"] >= "2026-04-01" for a in out))
+
+    def test_atoms_carry_descriptions(self):
+        text = q.format_atoms(q.select_atoms(self.c, text="capex", k=5))
+        self.assertIn(" — ", text)
+        self.assertGreater(len(text), 800)  # descriptions, not just names
+
+
 class ThemeDigest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -113,6 +129,13 @@ class ThemeDigest(unittest.TestCase):
         text = q.format_themes(self.themes[:3])
         self.assertIn("[THEME", text)
         self.assertIn("companies", text)
+        self.assertIn("one company's wording", text)  # label semantics are explicit
+
+    def test_samples_are_distinct_companies_with_substance(self):
+        for t in self.themes[:10]:
+            tickers = [s.split()[0] for s in t["samples"]]
+            self.assertEqual(len(tickers), len(set(tickers)))
+            self.assertTrue(all(" — " in s and len(s) > 60 for s in t["samples"]))
 
 
 class ParsePlan(unittest.TestCase):

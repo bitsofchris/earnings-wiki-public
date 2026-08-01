@@ -44,10 +44,16 @@ Reply with ONLY a JSON object, no prose:
 Question: """
 
 SYSTEM = """You answer questions about public-company earnings calls using ONLY the provided context.
-Context contains answer fragments tagged [TICKER date question-key] and may contain theme-trend
-digests tagged [THEME id] with per-quarter claim counts across companies.
-Rules: cite inline as [TICKER date]; ground trend claims in the digest numbers. If the context
-doesn't cover the question, say so.
+Context contains claims tagged [TICKER date ...] and may contain theme-trend digests tagged [THEME id].
+
+Rules:
+- Be concrete. Every point must name WHO said it, with specifics (numbers, quotes, products),
+  cited inline as [TICKER date]. Never present a claim without attribution.
+- A theme's "representative claim" is ONE company's wording for a cross-company pattern — never
+  restate it as a general fact. Describe the pattern in your own words, then ground it with
+  2-3 named company examples from the theme's sample claims.
+- Ground any trend statement (emerging/fading/rising) in the digest's per-quarter numbers.
+- If the context doesn't cover the question, say so plainly.
 These are AI-generated summaries that may contain errors; they are not investment advice."""
 
 
@@ -87,10 +93,13 @@ def build_context(plan, message):
                 f"so a theme born after {q0} is genuinely new — otherwise 'newness' means rising share):\n\n"
                 + q.format_themes(digest)
                 + "\n\nSupporting fragments:\n" + q.format_fragments(frags))
-    frags = q.select(CORPUS, **scope, questions=plan["questions"], text=text, k=28)
+    frags = q.select(CORPUS, **scope, questions=plan["questions"], text=text, k=18)
     if not frags:  # scope too tight — retry unscoped rather than answering from nothing
-        frags = q.select(CORPUS, text=text, k=28)
-    return q.format_fragments(frags)
+        frags = q.select(CORPUS, text=text, k=18)
+    atoms = q.select_atoms(CORPUS, **scope, text=text, k=10)
+    return (q.format_fragments(frags)
+            + "\n\nDetailed claims (richer context for the strongest matches):\n"
+            + q.format_atoms(atoms))
 
 
 def chat(message, history):

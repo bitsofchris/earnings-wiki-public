@@ -45,6 +45,11 @@ def load(root=HERE):
     df = Counter()
     for f in frags:
         df.update(f["_toks"].keys())
+    for n in nodes:
+        n["_toks"] = Counter(_toks(n["ticker"] + " " + n["name"] + " " + n["description"]))
+    atom_df = Counter()
+    for n in nodes:
+        atom_df.update(n["_toks"].keys())
     quarters = sorted({n["quarter"] for n in nodes})
     q_totals = Counter(n["quarter"] for n in nodes)
     return {
@@ -54,6 +59,7 @@ def load(root=HERE):
         "questions": sorted({f["question"] for f in frags}),
         "quarters": quarters, "q_totals": q_totals,
         "max_date": max(f["date"] for f in frags),
+        "atoms": nodes, "atom_df": atom_df,
     }
 
 
@@ -93,6 +99,39 @@ def select(corpus, symbols=None, sector=None, since=None, until=None,
                       key=lambda f: f["date"], reverse=True)
         out += rest[:k - len(out)]
     return out
+
+
+def select_atoms(corpus, symbols=None, sector=None, since=None, until=None, text=None, k=10):
+    """BM25 over the full atoms (rich descriptions with quotes/specifics) — the depth
+    layer behind the one-line fragments. Same scope filters; no question-key filter
+    (atoms use silver section slugs, not the standing-question keys)."""
+    symbols = {s.upper() for s in symbols} if symbols else None
+    scope = [a for a in corpus["atoms"]
+             if (not symbols or a["ticker"] in symbols)
+             and (not sector or a["sector"] == sector)
+             and (not since or a["call_date"] >= since)
+             and (not until or a["call_date"] <= until)]
+    if not text:
+        return sorted(scope, key=lambda a: a["call_date"], reverse=True)[:k]
+    q, n, df = _toks(text), len(corpus["atoms"]), corpus["atom_df"]
+    scored = []
+    for a in scope:
+        s = sum(a["_toks"][t] * math.log(1 + n / (1 + df[t])) for t in q if t in a["_toks"])
+        if s > 0:
+            scored.append((s, a))
+    scored.sort(key=lambda x: (-x[0], x[1]["call_date"]))
+    out = [a for _, a in scored[:k]]
+    if len(out) < k:
+        chosen = {id(a) for a in out}
+        rest = sorted((a for a in scope if id(a) not in chosen),
+                      key=lambda a: a["call_date"], reverse=True)
+        out += rest[:k - len(out)]
+    return out
+
+
+def format_atoms(atoms, trim=320):
+    return "\n".join(f"[{a['ticker']} {a['call_date']} {a['section']}] {a['name']} — "
+                     f"{a['description'][:trim]}" for a in atoms)
 
 
 # ---------------------------------------------------------------- theme trends
@@ -145,24 +184,38 @@ def theme_digest(corpus, symbols=None, sector=None, since=None, until=None, top=
             "per_quarter": {q: qc.get(q, 0) for q in quarters},
             "share_per_1000": share, "first_quarter": first_q,
             "delta_share": delta, "trend": trend,
-            "samples": [f"{m['ticker']} {m['call_date']}: {m['name']}"
-                        for m in sorted(ms, key=lambda m: m["call_date"], reverse=True)[:3]],
+            "samples": _theme_samples(ms),
         })
     out.sort(key=lambda t: (-t["n_tickers"], -t["n_claims"]))
     return out[:top]
 
 
+def _theme_samples(ms, n=4, trim=200):
+    """Concrete claims from n DISTINCT companies (newest first) — the substance a
+    label alone can't carry."""
+    out, seen = [], set()
+    for m in sorted(ms, key=lambda m: m["call_date"], reverse=True):
+        if m["ticker"] in seen:
+            continue
+        seen.add(m["ticker"])
+        out.append(f"{m['ticker']} {m['call_date']}: {m['name']} — {m['description'][:trim]}")
+        if len(out) == n:
+            break
+    return out
+
+
 def format_themes(themes):
-    """Render a digest for LLM context (or terminal reading)."""
+    """Render a digest for LLM context (or terminal reading). The label is one
+    representative company's claim, never a general statement — say so."""
     lines = []
     for t in themes:
-        pq = " ".join(f"{q.split('-')[1]}:{n}" for q, n in t["per_quarter"].items())
+        pq = " ".join(f"{qq}:{n}" for qq, n in t["per_quarter"].items())
         new = "NEW THEME (did not exist at corpus start) — " if t["trend"] == "emerging" else ""
         lines.append(
-            f"[THEME {t['id']}] {new}{t['label']}\n"
-            f"  {t['n_tickers']} companies · {t['n_claims']} claims · claims/quarter {pq} · "
-            f"{t['trend']} (Δshare {t['delta_share']:+}) · since {t['first_quarter']}\n"
-            f"  top: {', '.join(t['top_tickers'])}\n"
+            f"[THEME {t['id']}] {new}\"{t['label']}\" — one company's wording of a pattern "
+            f"across {t['n_tickers']} companies\n"
+            f"  {t['trend']} (Δshare {t['delta_share']:+}) · since {t['first_quarter']} · claims per quarter: {pq}\n"
+            f"  companies: {', '.join(t['top_tickers'])}\n"
             + "".join(f"  · {s}\n" for s in t["samples"]))
     return "\n".join(lines)
 
