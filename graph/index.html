@@ -111,10 +111,10 @@
     .width(window.innerWidth).height(window.innerHeight)
     .backgroundColor('#0b0d12')
     .nodeLabel(n => n.kind === 'cluster'
-      ? `<b>${n.label}</b><br>theme · ${n.count} atoms · mostly ${n.sector}${n.terms ? '<br><i>' + n.terms.join(' · ') + '</i>' : ''}`
+      ? `<b>${n.label}</b><br>theme · ${n.count} companies · ${n.nAtoms} claims · mostly ${n.sector}${n.terms ? '<br><i>' + n.terms.join(' · ') + '</i>' : ''}`
       : `<b>${n.ticker}</b> ${n.call_date} · ${n.section}<br>${n.name}`)
     .nodeColor(n => colorMaps[facet][n[facet]] || '#888')
-    .nodeVal(n => n.kind === 'cluster' ? 2 + Math.min(28, 1.5 * Math.sqrt(n.count)) : 1 + Math.min(8, (deg[n.id]||0)))
+    .nodeVal(n => n.kind === 'cluster' ? 2 + Math.min(28, 2 * Math.sqrt(n.count)) : 1 + Math.min(8, (deg[n.id]||0)))
     .linkOpacity(0.25)
     .linkWidth(l => (l.weight - 0.3) * 3)
     .onNodeClick(n => n.kind === 'cluster' ? showClusterPanel(n) : showPanel(n));
@@ -162,7 +162,10 @@
     }
     const ns = [];
     for (const c of CLUSTERS) {
-      c.count = c.members.reduce((s, m) => s + (m.call_date <= maxDate && passes(m) ? 1 : 0), 0);
+      // a theme's weight is how many distinct companies touch it, not raw claims
+      const vis = c.members.filter(m => m.call_date <= maxDate && passes(m));
+      c.nAtoms = vis.length;
+      c.count = new Set(vis.map(m => m.ticker)).size;
       if (c.count) ns.push(seedIfNew(c));
     }
     const ids = new Set(ns.map(n => n.id));
@@ -180,8 +183,9 @@
       stats = `${d.nodes.length} atoms · ${d.links.length} edges\n` +
         Object.entries(q).sort().map(([k,v]) => `${k}: ${v} atoms`).join('\n');
     } else {
-      const atoms = d.nodes.reduce((s, c) => s + c.count, 0);
-      stats = `${d.nodes.length} themes · ${atoms} atoms · ${d.links.length} links\nnode size = atoms in theme · click for members`;
+      const atoms = d.nodes.reduce((s, c) => s + c.nAtoms, 0);
+      stats = `${d.nodes.length} themes · ${atoms} claims · ${d.links.length} links\n` +
+        `node size = companies in theme (one claim per company per quarter)`;
     }
     document.getElementById('stats').textContent = stats;
   }
@@ -205,7 +209,7 @@
     const members = c.members.filter(m => m.call_date <= maxDate && passes(m))
       .sort((a, b) => (deg[b.id]||0) - (deg[a.id]||0)).slice(0, 12);
     p.innerHTML = `${panelHeader()}<h2>${c.label}</h2>
-      <div class="meta">theme · ${c.count} atoms · mostly ${c.sector}${c.terms ? ' · ' + c.terms.join(', ') : ''}</div>
+      <div class="meta">theme · ${c.count} companies · ${c.nAtoms} claims · mostly ${c.sector}${c.terms ? ' · ' + c.terms.join(', ') : ''}</div>
       <div>${byId[c.repId].description}</div>
       <div class="neighbors"><b>atoms in this theme:</b>${members.map(m =>
         `<div data-id="${m.id}"><b>${m.ticker}</b> ${m.call_date} · ${m.name}</div>`).join('')}</div>`;

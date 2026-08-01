@@ -11,6 +11,16 @@ Two modes, same clusters.json output (the UI doesn't care which produced it):
      nearest the true centroid. Inter-theme edges = centroid cosine similarity,
      pruned to each theme's TOP_EDGES strongest.
 
+     A theme carries weight because MULTIPLE COMPANIES converge on it, not because
+     one company repeats itself (mirrors tools/clusters.py in the private repo):
+       - scaffold atoms (generic names, thin descriptions) are excluded up front
+       - members are deduped to one atom per (ticker, quarter) — the one nearest
+         the centroid — so a company restating a point five ways counts once,
+         while the same company returning to a theme next quarter still counts
+       - clusters spanning < MIN_TICKERS distinct companies are dropped entirely
+     Dropped/deduped atoms still appear in the atoms view; only the theme layer
+     is distilled.
+
   2. label propagation on the public kNN similarity edges (fallback, stdlib only):
        python3 graph/build_clusters.py
 
@@ -36,6 +46,19 @@ TOP_EDGES = 4        # keep each cluster's N strongest inter-cluster links
 N_TERMS = 5          # distinctive terms per cluster (TF-IDF over member text)
 K_CANDIDATES = (150, 250, 350)
 SIL_SAMPLE = 2000    # atoms sampled for silhouette scoring
+MIN_TICKERS = 3      # cross-company rule (same as private tools/clusters.py):
+                     # a theme fewer than 3 companies touch isn't a theme
+
+# scaffold-atom filter, mirrored from private tools/clusters.py: these cluster on
+# the silver prompt's fingerprint ("Belief", "Working", ...), not on content
+GENERIC = {"belief", "believe", "beliefs", "working", "not working", "watch item", "compressed worry",
+           "the compressed worry", "action", "actions", "gap", "the gap", "numbers"}
+
+def substantive(n):
+    name = n["name"].lower().strip().rstrip(":.")
+    if name in GENERIC or name.startswith("no "):
+        return False
+    return len(n["description"]) >= 100
 
 STOP = set("""a an and are as at be but by for from has have in into is it its more not of on or
 over than that the their they this to was were will with we our you your""".split())
@@ -77,6 +100,7 @@ def make_cluster(cid, members, rep, label_atom=None):
         "label": by_id[label_atom or rep]["name"],
         "repId": rep,
         "memberIds": sorted(members),
+        "tickers": sorted({by_id[m]["ticker"] for m in members}),
         "sector": dominant(members, "sector"),
         "section": dominant(members, "section"),
         "quarter": dominant(members, "quarter"),
@@ -105,7 +129,8 @@ def kmeans_mode(emb_path):
     import numpy as np
 
     emb = json.load(open(emb_path))
-    ids = [n["id"] for n in nodes]
+    ids = [n["id"] for n in nodes if substantive(n)]
+    print(f"{len(ids)}/{len(nodes)} atoms pass the substantive filter")
     missing = [i for i in ids if i not in emb]
     if missing:
         raise SystemExit(f"{len(missing)} public atoms missing embeddings, e.g. {missing[:3]}")
@@ -163,24 +188,39 @@ def kmeans_mode(emb_path):
     sil, k, assign, C = best
     print(f"picked k={k}")
 
-    clusters = []
+    clusters, kept_j = [], []
+    dropped_single, deduped_away = 0, 0
     for j in range(k):
         m = np.flatnonzero(assign == j)
         if not len(m):
             continue
         order = m[np.argsort(-(X[m] @ C[j]))]          # members by closeness to true centroid
-        rep = ids[order[0]]
+        # dedup: one atom per (ticker, quarter), keeping the one nearest the centroid
+        seen, members = set(), []
+        for i in order:
+            key = (by_id[ids[i]]["ticker"], by_id[ids[i]]["quarter"])
+            if key in seen:
+                deduped_away += 1
+                continue
+            seen.add(key)
+            members.append(ids[i])
+        if len({t for t, _ in seen}) < MIN_TICKERS:    # cross-company rule
+            dropped_single += 1
+            continue
+        rep = members[0]
         # label: closest-to-centroid atom whose name is descriptive (terse names like
         # "Belief" or "Working" make bad theme labels)
-        label_atom = next((ids[i] for i in order[:10] if len(by_id[ids[i]]["name"].split()) >= 4), rep)
-        clusters.append(make_cluster(f"c{len(clusters)}", [ids[i] for i in m], rep, label_atom))
+        label_atom = next((i for i in members[:10] if len(by_id[i]["name"].split()) >= 4), rep)
+        clusters.append(make_cluster(f"c{len(clusters)}", members, rep, label_atom))
+        kept_j.append(j)
+    print(f"dedup removed {deduped_away} same-company-same-quarter repeats; "
+          f"{dropped_single} clusters dropped for <{MIN_TICKERS} companies")
 
     sims = C @ C.T
     agg = {}
-    live = [j for j in range(k) if (assign == j).any()]
-    remap = {j: f"c{i}" for i, j in enumerate(live)}
-    for ai, a in enumerate(live):
-        for b in live[ai + 1:]:
+    remap = {j: f"c{i}" for i, j in enumerate(kept_j)}
+    for ai, a in enumerate(kept_j):
+        for b in kept_j[ai + 1:]:
             agg[(remap[a], remap[b])] = {"weight": round(float(sims[a, b]), 4)}
     cluster_edges = prune_edges(agg)
     ws = sorted(e["weight"] for e in cluster_edges)
